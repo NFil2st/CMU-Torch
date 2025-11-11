@@ -1,74 +1,136 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import FeatureCard from '../../components/common/Card';
+import BackButton from '../../components/common/BackButton';
 import { LinearGradient } from 'expo-linear-gradient';
+
+const { width, height } = Dimensions.get('window'); // ดึงความสูงของหน้าจอมาใช้
 
 export default function HomeScreen({ navigation }) {
     const cards = [
         {
-            title: 'Exercise',
+            title: 'ออกกำลังกาย',
             icon: '🏋️‍♂️',
             colors: ['#38beef', '#e894ff'],
             screen: 'ExerciseList'
         },
         {
-            title: 'Nutrition',
+            title: 'อาหาร',
             icon: '🥗',
             colors: ['#48ee6c', '#185a9d'],
-            // screen: 'DietList'
+            //screen: 'DietList' 
         },
         {
-            title: 'Mental',
+            title: 'สุขภาพจิต',
             icon: '🧘‍♀️',
-            colors: ['#fff7ad', '#ffa9f9'],
-            // screen: 'MeditationList'
+            colors: ['#eabf33ff', '#ffa9f9'],
+            //screen: 'MeditationList' 
         },
-
         {
-            title: 'Ranking',
+            title: 'อันดับ',
             icon: '🏆',
-            colors: ['#ff002bff', '#fff2c8ff'],
-            // screen: 'SleepList'
+            colors: ['#ff002bff', '#f5da80ff'],
+            //screen: 'Rankings' 
         },
     ];
+    
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.greeting}>โหมดใส่ใจ</Text>
-            <Text style={styles.subtitle}>--------------</Text>
+        <LinearGradient
+            colors={['#A6A7FF', '#C490D1']} 
+            style={styles.fullScreenBackground}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+        >
 
-            <View style={styles.grid}>
-                {cards.map((card, index) => (
-                    <FeatureCard
-                        key={index}
-                        title={card.title}
-                        icon={card.icon}
-                        colors={card.colors}
-                        onPress={() => navigation.navigate(card.screen)}
-                    />
-                ))}
-            </View>
+            <BackButton navigation={navigation} />
 
-        </ScrollView>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                
+                {/* กล่องข้อความหลัก (Speech Bubble) ถูกกำหนดความสูง 50% ที่นี่ */}
+                <View style={styles.speechBubble}>
+                    
+                    <View style={styles.speechBubbleTail} />
+
+                    <View style={styles.contentWrapper}>
+                        
+                        <Text style={styles.greeting}>โหมดใส่ใจ</Text>
+
+                        <View style={styles.grid}>
+                            {cards.map((card, index) => (
+                                <FeatureCard
+                                    key={index}
+                                    title={card.title}
+                                    icon={card.icon}
+                                    colors={card.colors}
+                                    onPress={() => card.screen && navigation.navigate(card.screen)}
+                                />
+                            ))}
+                        </View>
+                    </View>
+                </View>
+
+            </ScrollView>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingTop: 450,
-        padding: 20,
-        backgroundColor: '#fff',
+    fullScreenBackground: {
+        flex: 1,
     },
+    scrollContent: {
+        flexGrow: 1,
+        // ทำให้เนื้อหาสามารถดันไปด้านล่างได้
+        justifyContent: 'flex-end', 
+        paddingBottom: 20,
+    },
+    
+    // --- Speech Bubble Styles ---
+    speechBubble: {
+        backgroundColor: '#fff',
+        marginHorizontal: 20,
+        borderRadius: 30,
+        // *** การเปลี่ยนแปลงหลัก: กำหนดความสูง 50% ของความสูงหน้าจอ ***
+        height: height * 0.5, 
+        // -----------------------------------------------------------
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 8,
+        // ใช้ flex เพื่อจัดการเนื้อหาภายใน speechBubble
+        justifyContent: 'flex-start',
+    },
+    contentWrapper: {
+        paddingHorizontal: 15,
+        paddingTop: 30, 
+        paddingBottom: 30, 
+        flex: 1, // ทำให้เนื้อหาเต็มพื้นที่ที่เหลือใน speechBubble
+    },
+    speechBubbleTail: {
+        position: 'absolute',
+        top: -15, 
+        alignSelf: 'flex-start',
+        left: 30, 
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderLeftWidth: 15,
+        borderRightWidth: 15,
+        borderBottomWidth: 15, 
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: 'white', 
+    },
+    
+    // --- Content Styles (อยู่ภายในกล่องขาว) ---
     greeting: {
-        fontSize: 26,
+        paddingBottom: 10,
+        fontSize: 17,
         textAlign: 'center',
         fontWeight: '700',
         color: '#333',
-    },
-    subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: '#555',
-        marginBottom: 20,
     },
     grid: {
         flexDirection: 'row',

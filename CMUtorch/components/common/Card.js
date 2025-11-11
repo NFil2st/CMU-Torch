@@ -27,10 +27,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         height: 150,
         width: '48%',
+        height: 120,
     },
     card: {
         flex: 1,
-        height: '100',
+        height: '100%',
         width: '100%',
         borderRadius: 20,
         justifyContent: 'center',
@@ -45,8 +46,11 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     title: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: '600',
         color: '#fff',
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
 });
