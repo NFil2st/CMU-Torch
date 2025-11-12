@@ -9,7 +9,7 @@ import TrackerScreen from '../screens/Tracker/TrackerScreen';
 import SplashScreen from '../screens/Splash/SplashScreen';
 import LoginScreen from '../screens/Login/LoginScreen';
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
-import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
+import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +40,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+        />
+        <Stack.Screen
+          name="Exercise"
+          component={ExerciseScreen}
         />
         <Stack.Screen
           name="ExerciseList"
