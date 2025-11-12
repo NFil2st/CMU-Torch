@@ -9,6 +9,7 @@ import TrackerScreen from '../screens/Tracker/TrackerScreen';
 import SplashScreen from '../screens/Splash/SplashScreen';
 import LoginScreen from '../screens/Login/LoginScreen';
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
+import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
 import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
 
 const Stack = createNativeStackNavigator();
@@ -21,7 +22,7 @@ export default function AppNavigator() {
         screenOptions={{
           headerShown: false,
           contentStyle: {
-            backgroundColor: 'transparent', // ✅ ทำให้โปร่งใส
+            backgroundColor: 'transparent',
           },
         }}
       >
