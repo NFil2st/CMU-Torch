@@ -45,7 +45,8 @@ const exercises = [
                                     title={card.title}
                                     icon={card.icon}
                                     colors={card.colors}
-                                    onPress={() => card.screen && navigation.navigate(card.screen)}
+                                    onPress={() =>navigation.navigate('ExerciseDetail', { exercise: card })
+                                    }
                                 />
                             ))}
                         </View>
