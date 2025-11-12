@@ -33,6 +33,11 @@ const exercises = [
                         
                         <Text style={styles.greeting}>ออกกำลังกาย</Text>
 
+                        <ScrollView
+                            contentContainerStyle={styles.grid}
+                            showsVerticalScrollIndicator={false}
+                        >
+
                         <View style={styles.grid}>
                             {exercises.map((card, index) => (
                                 <FeatureCard
@@ -44,6 +49,7 @@ const exercises = [
                                 />
                             ))}
                         </View>
+                        </ScrollView>
                     </View>
                 </View>
 
@@ -78,6 +84,7 @@ const styles = StyleSheet.create({
         elevation: 8,
         // ใช้ flex เพื่อจัดการเนื้อหาภายใน speechBubble
         justifyContent: 'flex-start',
+        overflow: 'hidden',
     },
     contentWrapper: {
         paddingHorizontal: 15,
