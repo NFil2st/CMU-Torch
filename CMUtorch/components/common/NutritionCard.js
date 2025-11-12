@@ -48,7 +48,6 @@ export default function Card({ title, icon, colors, onPress }) {
                     style={styles.card}>
 
                     <View style={styles.content}>
-                        <Text style={styles.icon}>{icon}</Text>
                         <Text style={styles.title}>{title}</Text>
                     </View>
 
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden',
         width: '48%',
-        height: 60,
+        height: 50,
     },
     card: {
         flex: 1,
@@ -86,6 +85,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
+        justifyContent: 'center',
+        alignItems: 'center',
         fontSize: 15,
         fontWeight: '600',
         color: '#fff',
