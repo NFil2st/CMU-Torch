@@ -1,36 +1,24 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import FeatureCard from '../../components/common/Card';
+import FeatureCard from '../../components/common/Recommen';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
 
 const { width, height } = Dimensions.get('window');
 
-export default function HomeScreen({ navigation }) {
+export default function ExerciseScreen({ navigation }) {
     const cards = [
         {
-            title: 'ออกกำลังกาย',
-            icon: '🏋️‍♂️',
+            title: 'ออกกำลังกายที่เหมาะสมสำหรับคุณ',
+            icon: '♥',
             colors: ['#38beef', '#e894ff'],
-            screen: 'Exercise'
+            screen: 'ExerciseList'
         },
         {
-            title: 'อาหาร',
-            icon: '🥗',
-            colors: ['#48ee6c', '#185a9d'],
-            screen: 'Nutrition'
-        },
-        {
-            title: 'สุขภาพจิต',
-            icon: '🧘‍♀️',
-            colors: ['#eabf33ff', '#ffa9f9'],
-            //screen: 'MeditationList' 
-        },
-        {
-            title: 'อันดับ',
-            icon: '🏆',
-            colors: ['#ff002bff', '#f5da80ff'],
-            //screen: 'Rankings' 
+            title: 'ประเภทการออกกำลังกาย',
+            icon: '🏀',
+            colors: ['#38beef', '#e894ff'],
+            screen: 'ExerciseList'
         },
     ];
     
@@ -45,7 +33,7 @@ export default function HomeScreen({ navigation }) {
 
                     <View style={styles.contentWrapper}>
                         
-                        <Text style={styles.greeting}>โหมดใส่ใจ</Text>
+                        <Text style={styles.greeting}>ออกกำลังกาย</Text>
 
                         <View style={styles.grid}>
                             {cards.map((card, index) => (
