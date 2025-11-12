@@ -4,12 +4,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
 
-
 const { width, height } = Dimensions.get('window');
 
 export default function ExerciseDetailScreen({ route, navigation }) {
   const { exercise } = route.params;
 
+  // ✅ นำกลับมา (เหมือนที่คุณมีในเวอร์ชันก่อน)
   const exercisePlaces = {
     'บาสเกตบอล': [
       { name: 'สนามบาสกลางแจ้ง', open: '06:00', close: '21:00' },
@@ -46,23 +46,24 @@ export default function ExerciseDetailScreen({ route, navigation }) {
     ],
   };
 
+  // ✅ แล้วค่อยใช้
   const places = exercisePlaces[exercise.title] || [];
 
-  // ✅ Animation (เหมือน Card)
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const darkAnim = useRef(new Animated.Value(0)).current;
+  // ✅ เก็บ animation แยกตามจำนวนปุ่ม
+  const scaleAnims = useRef(places.map(() => new Animated.Value(1))).current;
+  const darkAnims = useRef(places.map(() => new Animated.Value(0))).current;
 
-  const handlePressIn = () => {
+  const handlePressIn = (index) => {
     Animated.parallel([
-      Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }),
-      Animated.timing(darkAnim, { toValue: 0.2, duration: 120, useNativeDriver: false }),
+      Animated.spring(scaleAnims[index], { toValue: 0.97, useNativeDriver: true }),
+      Animated.timing(darkAnims[index], { toValue: 0.2, duration: 120, useNativeDriver: false }),
     ]).start();
   };
 
-  const handlePressOut = () => {
+  const handlePressOut = (index) => {
     Animated.parallel([
-      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
-      Animated.timing(darkAnim, { toValue: 0, duration: 120, useNativeDriver: false }),
+      Animated.spring(scaleAnims[index], { toValue: 1, useNativeDriver: true }),
+      Animated.timing(darkAnims[index], { toValue: 0, duration: 120, useNativeDriver: false }),
     ]).start();
   };
 
@@ -70,69 +71,62 @@ export default function ExerciseDetailScreen({ route, navigation }) {
     <AppBackground>
       <BackButton navigation={navigation} />
 
-      {/* Header */}
-      <View style={styles.header}>
-      </View>
-
-      {/* กล่องขาว */}
-      <View style={styles.speechBubble}>
-        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.speechBubble}>
+          <View style={styles.speechBubbleTail} />
+          <ScrollView contentContainerStyle={styles.innerScroll} showsVerticalScrollIndicator={false}>
             <Text style={styles.headerTitle}>{exercise.icon} {exercise.title}</Text>
 
-          {places.map((place, index) => (
-  <View key={index} style={styles.placeCard}>
-    <View style={styles.placeInfoRow}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.placeName}>{place.name}</Text>
-        <Text style={styles.placeTime}>เปิด {place.open} - ปิด {place.close}</Text>
-      </View>
+            {places.map((place, index) => (
+              <View key={index} style={styles.placeCard}>
+                <View style={styles.placeInfoRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.placeName}>{place.name}</Text>
+                    <Text style={styles.placeTime}>เปิด {place.open} - ปิด {place.close}</Text>
+                  </View>
 
-      <Pressable
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        style={styles.routeButtonWrapper}
-      >
-        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-          <LinearGradient
-            colors={['#007AFF', '#00BFFF']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.routeButtonSmall}
-          >
-            <Text style={styles.routeButtonTextSmall}>ดูเส้นทาง</Text>
-            <Animated.View
-              style={[
-                StyleSheet.absoluteFillObject,
-                { backgroundColor: 'black', opacity: darkAnim, borderRadius: 20 },
-              ]}
-            />
-          </LinearGradient>
-        </Animated.View>
-      </Pressable>
-    </View>
-  </View>
-))}
-
-
-        </ScrollView>
-      </View>
+                  {/* ✅ ส่ง index เข้าไปใน handler */}
+                  <Pressable
+                    onPressIn={() => handlePressIn(index)}
+                    onPressOut={() => handlePressOut(index)}
+                    style={styles.routeButtonWrapper}
+                  >
+                    <Animated.View style={{ transform: [{ scale: scaleAnims[index] }] }}>
+                      <LinearGradient
+                        colors={['#007AFF', '#00BFFF']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.routeButtonSmall}
+                      >
+                        <Text style={styles.routeButtonTextSmall}>ดูเส้นทาง</Text>
+                        <Animated.View
+                          style={[
+                            StyleSheet.absoluteFillObject,
+                            { backgroundColor: 'black', opacity: darkAnims[index], borderRadius: 20 },
+                          ]}
+                        />
+                      </LinearGradient>
+                    </Animated.View>
+                  </Pressable>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
     </AppBackground>
   );
 }
 
+
 const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#000',
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 20,
   },
   speechBubble: {
-    height: height * 0.5,
+    height: height * 0.5, // 👈 ปรับจาก 0.5 → 0.7 (เหมือนอีกหน้าหนึ่ง)
     backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 30,
@@ -143,9 +137,35 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 8,
-    flex: 1,
+    justifyContent: 'flex-start',
     overflow: 'hidden',
   },
+  speechBubbleTail: {
+    position: 'absolute',
+    top: -15,
+    alignSelf: 'flex-start',
+    left: 30,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 15,
+    borderRightWidth: 15,
+    borderBottomWidth: 15,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'white',
+  },
+  innerScroll: {
+    paddingBottom: 40,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 10,
+  },
+
   scrollContainer: {
     paddingBottom: 40,
   },

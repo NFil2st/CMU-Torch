@@ -6,7 +6,7 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const handleLogin = async () => {
+  const handleLogintest = async () => {
     // ตัวอย่าง login ง่าย ๆ
     if (username && password) {
         await AsyncStorage.setItem('userToken', '12345'); // save token
@@ -17,6 +17,36 @@ export default function LoginScreen({ navigation }) {
       alert('กรุณากรอก username และ password');
     }
   };
+  const handleLogin = async () => {
+  if (!username || !password) {
+    alert('กรุณากรอก username และ password');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://10.0.2.2:3000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // สมมติ backend ส่ง token กลับมา
+      await AsyncStorage.setItem('userToken', data.token);
+      const expireTime = Date.now() + 3 * 60 * 1000;
+      await AsyncStorage.setItem('tokenExpire', expireTime.toString());
+      navigation.replace('Tracker');
+    } else {
+      alert(data.message || 'Login failed');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
+  }
+};
+
 
   return (
     <View style={styles.container}>
@@ -42,8 +72,11 @@ export default function LoginScreen({ navigation }) {
         value={password} 
         onChangeText={setPassword} 
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogintest}>
+        <Text style={styles.buttonText}>Login สำหรับเทส</Text>
+      </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login สำหรับเชื่อมต่อกับหลังบ้านจริงๆ</Text>
       </TouchableOpacity>
     </View>
   );

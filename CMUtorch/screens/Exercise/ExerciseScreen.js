@@ -12,7 +12,7 @@ export default function ExerciseScreen({ navigation }) {
             title: 'ออกกำลังกายที่เหมาะสมสำหรับคุณ',
             icon: '♥',
             colors: ['#38beef', '#e894ff'],
-            screen: 'ExerciseList'
+            screen: 'ExerciseRecommendation'
         },
         {
             title: 'ประเภทการออกกำลังกาย',

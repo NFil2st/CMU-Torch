@@ -2,15 +2,25 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+//หน้าหลัก
 import HomeScreen from '../screens/Home/HomeScreen';
-import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
-import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
 import TrackerScreen from '../screens/Tracker/TrackerScreen';
+
+//หน้าโหลดเข้่าแอพ
 import SplashScreen from '../screens/Splash/SplashScreen';
+
+//หน้าเข้าสู่ระบบ
 import LoginScreen from '../screens/Login/LoginScreen';
+
+//โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
+
+//ออกกำลังกาย
 import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
+import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
+import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
+import ExerciseRecommendationScreen from '../screens/Exercise/ExerciseRecomman';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,14 +53,6 @@ export default function AppNavigator() {
           component={HomeScreen}
         />
         <Stack.Screen
-          name="Exercise"
-          component={ExerciseScreen}
-        />
-        <Stack.Screen
-          name="ExerciseList"
-          component={ExerciseListScreen}
-        />
-        <Stack.Screen
           name="Nutrition"
           component={NutritionScreen}
         />
@@ -59,9 +61,23 @@ export default function AppNavigator() {
           component={NutritionIncrease}
         />
         
+
+        {/* Exercise Screens */}
+        <Stack.Screen
+          name="Exercise"
+          component={ExerciseScreen}
+        />
+        <Stack.Screen
+          name="ExerciseList"
+          component={ExerciseListScreen}
+        />
         <Stack.Screen
           name="ExerciseDetail"
           component={ExerciseDetailScreen}
+        />
+        <Stack.Screen
+          name="ExerciseRecommendation"
+          component={ExerciseRecommendationScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
