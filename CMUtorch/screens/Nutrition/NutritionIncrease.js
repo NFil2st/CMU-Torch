@@ -6,22 +6,20 @@ import AppBackground from '../../components/common/AppBackground';
 
 const { width, height } = Dimensions.get('window');
 
-export default function NutritionScreen({ navigation }) {
+export default function NutritionIncrease({ navigation }) {
 
     const foods = [
         { id: 1, name: 'Lobster', image: require('../../assets/Robster.png') },
         { id: 2, name: 'Ratatuy', image: require('../../assets/Ratatuy.png') },
+        { id: 3, name: 'Steck', image: require('../../assets/Steck.png') },
+        { id: 4, name: 'Wagil', image: require('../../assets/Wagil.png') },
+        // { id: 5, name: 'Omlet', image: require('../../assets/Omlet.jpg') },
     ];
     const cards = [
         {
-            title: 'เพิ่มน้ำหนัก',
-            colors: ['#f24242', '#e894ff'],
-            screen: 'NutritionIncrease'
-        },
-        {
-            title: 'ลดน้ำหนัก',
+            title: 'หมวดหมู่ลดน้ำหนัก',
             colors: ['#48ee6c', '#e894ff'],
-            // screen: 'หมวดหมู่ลดน้ำหนัก'
+            // screen: 'หมวดหมู่เพิ่มน้ำหนัก'
         },
     ];
 
@@ -30,19 +28,9 @@ export default function NutritionScreen({ navigation }) {
 
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.speechBubble}>
-                <View style={styles.speechBubbleTail} />
                 <View style={styles.contentWrapper}>
 
-                    <Text style={styles.greeting}>เวลามีอารมณ์ดี </Text>
-                    <Text style={styles.greeting}>รสจัดจะยิ่งฟินและอร่อย!</Text>
-                    <ScrollView horizontal nestedScrollEnabled showsHorizontalScrollIndicator={false} style={styles.foodScroll}>
-                        {foods.map((item) => (
-                            <View key={item.id} style={styles.foodCard}>
-                                <Image source={item.image} style={styles.foodImage} />
-                                <Text style={styles.foodName}>{item.name}</Text>
-                            </View>
-                        ))}
-                    </ScrollView>
+                    <Text style={styles.greeting}>วันนี้อยากเพิ่มน้ำหนักหรอ </Text>
 
                     <View style={styles.grid}>
                         {cards.map((card, index) => (
@@ -54,6 +42,16 @@ export default function NutritionScreen({ navigation }) {
                             />
                         ))}
                     </View>
+
+                    <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={true} style={styles.foodScroll}>
+                        {foods.map((item) => (
+                            <View key={item.id} style={styles.foodCard}>
+                                <Image source={item.image} style={styles.foodImage} />
+                                <Text style={styles.foodName}>{item.name}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
+
                 </View>
             </View>
         </ScrollView>
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         justifyContent: 'flex-end',
-        paddingBottom: 20,
     },
     scrollContent: {
         flexGrow: 1,
@@ -78,9 +75,8 @@ const styles = StyleSheet.create({
 
     speechBubble: {
         backgroundColor: '#fff',
-        marginHorizontal: 20,
         borderRadius: 30,
-        height: height * 0.48,
+        height: height * 0.85,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
@@ -94,32 +90,17 @@ const styles = StyleSheet.create({
         paddingBottom: 30,
         flex: 1,
     },
-    speechBubbleTail: {
-        position: 'absolute',
-        top: -15,
-        alignSelf: 'flex-start',
-        left: 30,
-        width: 0,
-        height: 0,
-        backgroundColor: 'transparent',
-        borderStyle: 'solid',
-        borderLeftWidth: 15,
-        borderRightWidth: 15,
-        borderBottomWidth: 15,
-        borderLeftColor: 'transparent',
-        borderRightColor: 'transparent',
-        borderBottomColor: 'white',
-    },
-
     greeting: {
         textAlign: 'start',
         paddingBottom: 10,
         paddingRight: 50,
-        fontSize: 17,
+        fontSize: 19,
         fontWeight: '700',
-        color: '#333',
+        color: 'rgba(0, 0, 0, 1)',
     },
     grid: {
+        paddingTop: 10,
+        paddingBottom: 10,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
@@ -129,13 +110,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 9,
     },
     foodCard: {
-        height: 250,
+        height: 210,
         width: 260,
         backgroundColor: '#fff',
         borderRadius: 15,
         marginRight: 12,
         padding: 10,
         elevation: 3,
+        marginBottom: 12,
     },
     foodImage: {
         width: '100%',
