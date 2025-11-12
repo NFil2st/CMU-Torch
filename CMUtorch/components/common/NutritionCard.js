@@ -68,10 +68,8 @@ const styles = StyleSheet.create({
     wrapper: {
         borderRadius: 20,
         overflow: 'hidden',
-        marginBottom: 10,
-        height: 150,
         width: '48%',
-        height: 120,
+        height: 60,
     },
     card: {
         flex: 1,
@@ -87,14 +85,10 @@ const styles = StyleSheet.create({
     content: {
         alignItems: 'center',
     },
-    icon: {
-        fontSize: 40,
-        marginBottom: 8,
-    },
     title: {
         fontSize: 15,
         fontWeight: '600',
-        color: '#000',
+        color: '#fff',
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 2,

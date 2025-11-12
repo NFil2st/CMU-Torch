@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         borderRadius: 30,
         // *** การเปลี่ยนแปลงหลัก: กำหนดความสูง 50% ของความสูงหน้าจอ ***
-        height: height * 0.5, 
+        height: height * 0.7, 
         // -----------------------------------------------------------
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
