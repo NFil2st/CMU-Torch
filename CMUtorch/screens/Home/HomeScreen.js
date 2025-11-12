@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import FeatureCard from '../../components/common/Card';
 import BackButton from '../../components/common/BackButton';
-import { LinearGradient } from 'expo-linear-gradient';
+import AppBackground from '../../components/common/AppBackground';
 
 const { width, height } = Dimensions.get('window'); // ดึงความสูงของหน้าจอมาใช้
 
@@ -34,14 +34,7 @@ export default function HomeScreen({ navigation }) {
         },
     ];
     
-    return (
-        <LinearGradient
-            colors={['#A6A7FF', '#C490D1']} 
-            style={styles.fullScreenBackground}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-        >
-
+    return (<AppBackground>
             <BackButton navigation={navigation} />
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -70,7 +63,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
 
             </ScrollView>
-        </LinearGradient>
+        </AppBackground>
     );
 }
 

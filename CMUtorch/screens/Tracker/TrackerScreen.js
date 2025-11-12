@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'; // ต้องใช้ component นี้สำหรับพื้นหลัง
+import AppBackground from '../../components/common/AppBackground';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,13 +29,7 @@ const cards = [
 
 export default function TrackerScreen({ navigation }) {
     return (
-        // 1. ใช้ LinearGradient คลุมทั้งจอเพื่อทำพื้นหลังสีไล่โทน
-        <LinearGradient
-            colors={['#A6A7FF', '#C490D1']} // สีไล่โทนฟ้า-ม่วง-ชมพู (ปรับตามภาพจริง)
-            style={styles.fullScreenBackground}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-        >
+        <AppBackground>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 
                 {/* 2. กล่องข้อความหลัก (Speech Bubble) */}
@@ -51,11 +45,10 @@ export default function TrackerScreen({ navigation }) {
                         <View style={styles.grid}>
                             {cards.map((card, index) => (
                                 <TouchableOpacity
-                                    key={index}
-                                    onPress={() => navigation.navigate(card.screen)}
-                                    // ปรับ style.wrapper ให้เน้นการจัดวางในแนวนอน
-                                    style={styles.optionWrapper} 
-                                >
+                  key={index}
+                  onPress={() => navigation.navigate(card.screen)}
+                  style={styles.optionWrapper}
+                >
                                     {/* 5. ใช้ View ธรรมดาแทน LinearGradient สำหรับปุ่ม */}
                                     <View style={styles.card}>
                                         <View style={styles.content}>
@@ -70,7 +63,7 @@ export default function TrackerScreen({ navigation }) {
                 </View>
 
             </ScrollView>
-        </LinearGradient>
+        </AppBackground>
     );
 }
 
