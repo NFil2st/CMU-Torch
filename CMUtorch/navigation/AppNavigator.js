@@ -6,6 +6,8 @@ import HomeScreen from '../screens/Home/HomeScreen';
 import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
 import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
 import TrackerScreen from '../screens/Tracker/TrackerScreen';
+import SplashScreen from '../screens/Splash/SplashScreen';
+import LoginScreen from '../screens/Login/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +15,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+       initialRouteName="Splash"
         screenOptions={{
           headerShown: false,
           contentStyle: {
@@ -20,6 +23,14 @@ export default function AppNavigator() {
           },
         }}
       >
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+        />
         <Stack.Screen
           name="Tracker"
           component={TrackerScreen}
