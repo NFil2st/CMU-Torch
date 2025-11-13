@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-nat
 import FeatureCard from '../../components/common/NutritionCard';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
+import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +26,7 @@ export default function NutritionIncrease({ navigation }) {
 
     return (<AppBackground>
         <BackButton navigation={navigation} />
+        <NavBar navigation={navigation} />
 
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.speechBubble}>

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import FeatureCard from '../../components/common/Recommen';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
+import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,6 +25,7 @@ export default function ExerciseScreen({ navigation }) {
     
     return (<AppBackground>
             <BackButton navigation={navigation} />
+            <NavBar navigation={navigation} />
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 

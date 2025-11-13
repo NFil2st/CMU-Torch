@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-nat
 import FeatureCard from '../../components/common/ExerciseCard';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
+import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +26,7 @@ export default function ExerciseRecommendationScreen({ navigation }) {
   return (
     <AppBackground>
       <BackButton navigation={navigation} />
+      <NavBar navigation={navigation} />
 
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.speechBubble}>

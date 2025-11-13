@@ -24,7 +24,14 @@ const backStyles = StyleSheet.create({
     top: 50,
     left: 20,
     zIndex: 10,
-    padding: 5,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 25, // ✅ ทำให้กลม (ครึ่งหนึ่งของขนาด)
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
   },
 });
 

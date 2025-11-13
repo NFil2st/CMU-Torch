@@ -12,6 +12,12 @@ import SplashScreen from '../screens/Splash/SplashScreen';
 //หน้าเข้าสู่ระบบ
 import LoginScreen from '../screens/Login/LoginScreen';
 
+//โปรไฟล์
+import ProfileScreen from '../screens/Profile/ProfileScreen';
+
+//หน้าสรุปผล
+import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
+
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
@@ -34,6 +40,7 @@ export default function AppNavigator() {
           contentStyle: {
             backgroundColor: 'transparent',
           },
+          animation: 'fade',
         }}
       >
         <Stack.Screen
@@ -61,6 +68,17 @@ export default function AppNavigator() {
           component={NutritionIncrease}
         />
         
+        {/* Profile Screens */
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+        />}
+
+        {/* Summarize Screens */}
+        <Stack.Screen
+          name="Summarize"
+          component={SummarizeScreen}
+        />
 
         {/* Exercise Screens */}
         <Stack.Screen
