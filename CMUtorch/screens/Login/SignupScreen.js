@@ -17,7 +17,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("https://your-server.com/api/send-otp", { email });
+      const res = await axios.post("http://10.0.2.2:3000/api/send-otp", { email });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "ส่ง OTP ไปที่อีเมลแล้ว");
         setStep(2);
@@ -37,7 +37,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("https://your-server.com/api/verify-otp", { email, otp });
+      const res = await axios.post("http://10.0.2.2:3000/api/verify-otp", { email, otp });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "OTP ถูกต้อง");
         setStep(3);
@@ -61,7 +61,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("https://your-server.com/api/register", {
+      const res = await axios.post("http://10.0.2.2:3000/api/register", {
         email,
         username,
         password,
