@@ -18,9 +18,9 @@ export default function NutritionIncrease({ navigation }) {
     ];
     const cards = [
         {
-            title: 'หมวดหมู่ลดน้ำหนัก',
+            title: 'หมวดหมู่เพิ่มน้ำหนัก',
             colors: ['#48ee6c', '#e894ff'],
-            screen: 'NutritionDecrease'
+            screen: 'NutritionIncrease'
         },
     ];
 
@@ -32,7 +32,7 @@ export default function NutritionIncrease({ navigation }) {
             <View style={styles.speechBubble}>
                 <View style={styles.contentWrapper}>
 
-                    <Text style={styles.greeting}>วันนี้อยากเพิ่มน้ำหนักหรอ </Text>
+                    <Text style={styles.greeting}>วันนี้อยากลดน้ำหนักหรอ </Text>
 
                     <View style={styles.grid}>
                         {cards.map((card, index) => (
