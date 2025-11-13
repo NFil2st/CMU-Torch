@@ -78,6 +78,12 @@ export default function LoginScreen({ navigation }) {
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login สำหรับเชื่อมต่อกับหลังบ้านจริงๆ</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+  style={[styles.button, { backgroundColor: '#FFA500', marginTop: 10 }]}
+  onPress={() => navigation.navigate('Signup')}
+>
+  <Text style={styles.buttonText}>สมัครบัญชี</Text>
+</TouchableOpacity>
     </View>
   );
 }

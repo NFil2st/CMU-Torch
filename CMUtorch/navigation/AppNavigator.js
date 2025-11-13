@@ -11,6 +11,7 @@ import SplashScreen from '../screens/Splash/SplashScreen';
 
 //หน้าเข้าสู่ระบบ
 import LoginScreen from '../screens/Login/LoginScreen';
+import SignupScreen from '../screens/Login/SignupScreen';
 
 //โปรไฟล์
 import ProfileScreen from '../screens/Profile/ProfileScreen';
@@ -47,10 +48,18 @@ export default function AppNavigator() {
           name="Splash"
           component={SplashScreen}
         />
+
+        {/* Login Screens */}
         <Stack.Screen
           name="Login"
           component={LoginScreen}
         />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+        />
+
+        {/* Main App Screens */}
         <Stack.Screen
           name="Tracker"
           component={TrackerScreen}
@@ -59,6 +68,8 @@ export default function AppNavigator() {
           name="Home"
           component={HomeScreen}
         />
+
+        {/* Nutrition Screens */}
         <Stack.Screen
           name="Nutrition"
           component={NutritionScreen}
