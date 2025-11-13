@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import FeatureCard from '../../components/common/ExerciseCard';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
+import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window'); // ดึงความสูงของหน้าจอมาใช้
 
@@ -21,6 +22,7 @@ const exercises = [
     
     return (<AppBackground>
             <BackButton navigation={navigation} />
+            <NavBar navigation={navigation} />
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 
@@ -45,7 +47,8 @@ const exercises = [
                                     title={card.title}
                                     icon={card.icon}
                                     colors={card.colors}
-                                    onPress={() => card.screen && navigation.navigate(card.screen)}
+                                    onPress={() =>navigation.navigate('ExerciseDetail', { exercise: card })
+                                    }
                                 />
                             ))}
                         </View>
