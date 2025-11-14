@@ -10,10 +10,10 @@ const { width, height } = Dimensions.get('window');
 export default function NutritionIncrease({ navigation }) {
 
     const foods = [
-        { id: 1, name: 'Lobster', image: require('../../assets/Robster.png') },
-        { id: 2, name: 'Ratatuy', image: require('../../assets/Ratatuy.png') },
-        { id: 3, name: 'Steck', image: require('../../assets/Steck.png') },
-        { id: 4, name: 'Wagil', image: require('../../assets/Wagil.png') },
+        { id: 1, name: 'Lobster', image: require('../../assets/food/Robster.png') },
+        { id: 2, name: 'Ratatuy', image: require('../../assets/food/Ratatuy.png') },
+        { id: 3, name: 'Steck', image: require('../../assets/food/Steck.png') },
+        { id: 4, name: 'Wagil', image: require('../../assets/food/Wagil.png') },
         // { id: 5, name: 'Omlet', image: require('../../assets/Omlet.jpg') },
     ];
     const cards = [
