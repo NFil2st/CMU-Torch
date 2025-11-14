@@ -22,6 +22,12 @@ import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
+import NutritionDecrease from '../screens/Nutrition/NutritionDecrease';
+
+import MentalScreen from '../screens/Mental/MentalScreen';
+import MentalScreenSecond from '../screens/Mental/MentalScreenSecond';
+import MentalPositive from '../screens/Mental/MentalPositive';
+import MentalNegative from '../screens/Mental/MentalNegative';
 
 //ออกกำลังกาย
 import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
@@ -35,7 +41,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-       initialRouteName="Splash"
+        initialRouteName="Splash"
         screenOptions={{
           headerShown: false,
           contentStyle: {
@@ -78,12 +84,16 @@ export default function AppNavigator() {
           name="NutritionIncrease"
           component={NutritionIncrease}
         />
-        
-        {/* Profile Screens */
         <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-        />}
+          name="NutritionDecrease"
+          component={NutritionDecrease}
+        />
+
+        {/* Profile Screens */
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+          />}
 
         {/* Summarize Screens */}
         <Stack.Screen
@@ -107,6 +117,22 @@ export default function AppNavigator() {
         <Stack.Screen
           name="ExerciseRecommendation"
           component={ExerciseRecommendationScreen}
+        />
+        <Stack.Screen
+          name="MentalScreen"
+          component={MentalScreen}
+        />
+        <Stack.Screen
+          name="MentalScreenSecond"
+          component={MentalScreenSecond}
+        />
+        <Stack.Screen
+          name="MentalPositive"
+          component={MentalPositive}
+        />
+        <Stack.Screen
+          name="MentalNegative"
+          component={MentalNegative}
         />
       </Stack.Navigator>
     </NavigationContainer>

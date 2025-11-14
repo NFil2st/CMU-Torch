@@ -1,41 +1,37 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import FeatureCard from '../../components/common/Card';
+import FeatureCard from '../../components/common/MentalCard';
 import BackButton from '../../components/common/BackButton';
-import AppBackgroundWithMascot from '../../components/common/AppBackgroundWithMascot';
+import AppBackground from '../../components/common/AppBackground';
 import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window');
 
-export default function HomeScreen({ navigation }) {
+export default function MentalScreen ({ navigation }) {
     const cards = [
         {
-            title: 'ออกกำลังกาย',
-            icon: '🏋️‍♂️',
+            title: 'วันนี้รู้สึกว่าไม่อยากทำอะไรเลย',
+            colors: ['#f24242', '#e894ff'],
+            screen: 'MentalScreenSecond'
+        },
+        {
+            title: 'วันนี้รู้สึกมีแรงและมีกำลังใจจะทำสิ่งต่าง ๆ',
+            colors: ['#fff7ad', '#ffa9f9'],
+            screen: 'MentalScreenSecond'
+        },
+        {
+            title: 'วันนี้หัวเราะหรือยิ้มด้วย',
             colors: ['#38beef', '#e894ff'],
-            screen: 'Exercise'
+            screen: 'MentalScreenSecond'
         },
         {
-            title: 'อาหาร',
-            icon: '🥗',
-            colors: ['#48ee6c', '#185a9d'],
-            screen: 'Nutrition'
-        },
-        {
-            title: 'สุขภาพจิต',
-            icon: '🧘‍♀️',
-            colors: ['#eabf33ff', '#ffa9f9'],
-            screen: 'MentalScreen'
-        },
-        {
-            title: 'อันดับ',
-            icon: '🏆',
-            colors: ['#ff002bff', '#f5da80ff'],
-            //screen: 'Rankings' 
+            title: 'วันนี้รู้สึกภูมิใจกับสิ่งที่ตัวเองทำ',
+            colors: ['#48ee6c', '#e894ff'],
+            screen: 'MentalScreenSecond'
         },
     ];
     
-    return (<AppBackgroundWithMascot>
+    return (<AppBackground>
             <BackButton navigation={navigation} />
             <NavBar navigation={navigation} />
 
@@ -47,14 +43,13 @@ export default function HomeScreen({ navigation }) {
 
                     <View style={styles.contentWrapper}>
                         
-                        <Text style={styles.greeting}>โหมดใส่ใจ</Text>
+                        <Text style={styles.greeting}>คำถามแรกน้า</Text>
 
                         <View style={styles.grid}>
                             {cards.map((card, index) => (
                                 <FeatureCard
                                     key={index}
                                     title={card.title}
-                                    icon={card.icon}
                                     colors={card.colors}
                                     onPress={() => card.screen && navigation.navigate(card.screen)}
                                 />
@@ -64,7 +59,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
 
             </ScrollView>
-        </AppBackgroundWithMascot>
+        </AppBackground>
     );
 }
 
@@ -75,12 +70,10 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
         justifyContent: 'flex-end', 
-        paddingBottom: 20,
     },
     
     speechBubble: {
         backgroundColor: '#fff',
-        marginHorizontal: 20,
         borderRadius: 30,
         height: height * 0.5, 
         shadowColor: '#000',
@@ -121,6 +114,7 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     grid: {
+        paddingTop: 20,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',

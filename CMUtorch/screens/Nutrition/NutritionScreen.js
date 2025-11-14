@@ -22,7 +22,7 @@ export default function NutritionScreen({ navigation }) {
         {
             title: 'ลดน้ำหนัก',
             colors: ['#48ee6c', '#e894ff'],
-            // screen: 'หมวดหมู่ลดน้ำหนัก'
+            screen: 'NutritionDecrease'
         },
     ];
 
