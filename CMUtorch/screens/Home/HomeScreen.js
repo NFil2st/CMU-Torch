@@ -31,7 +31,7 @@ export default function HomeScreen({ navigation }) {
             title: 'อันดับ',
             icon: '🏆',
             colors: ['#ff002bff', '#f5da80ff'],
-            //screen: 'Rankings' 
+            screen: 'RankingScreen' 
         },
     ];
     
