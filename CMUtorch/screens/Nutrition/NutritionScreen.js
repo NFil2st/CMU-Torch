@@ -10,8 +10,8 @@ const { width, height } = Dimensions.get('window');
 export default function NutritionScreen({ navigation }) {
 
     const foods = [
-        { id: 1, name: 'Lobster', image: require('../../assets/Robster.png') },
-        { id: 2, name: 'Ratatuy', image: require('../../assets/Ratatuy.png') },
+        { id: 1, name: 'Lobster', image: require('../../assets/food/Robster.png') },
+        { id: 2, name: 'Ratatuy', image: require('../../assets/food/Ratatuy.png') },
     ];
     const cards = [
         {
