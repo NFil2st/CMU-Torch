@@ -103,7 +103,23 @@ app.post('/api/login', async (req, res) => {
 
   return res.json({ success: true, token });
 });
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
 
+  const user = users.find(u => u.username === username);
+  if (!user) return res.status(400).json({ success: false, message: 'ไม่พบผู้ใช้' });
+
+  const match = await bcrypt.compare(password, user.passwordHash);
+  if (!match) return res.status(400).json({ success: false, message: 'รหัสผ่านผิด' });
+
+  const token = jwt.sign(
+    { username: user.username, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+
+  return res.json({ success: true, token });
+});
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
