@@ -19,6 +19,9 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 //หน้าสรุปผล
 import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
 
+// widgets
+import DailyLogWidget from '../components/common/DailyLogWidget';
+
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
@@ -63,6 +66,12 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Signup"
           component={SignupScreen}
+        />
+
+        {/* Widget Screens */}
+        <Stack.Screen
+          name="DailyLogWidget"
+          component={DailyLogWidget}
         />
 
         {/* Main App Screens */}
