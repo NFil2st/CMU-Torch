@@ -7,6 +7,8 @@ export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [major, setMajor] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -17,7 +19,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.0.2.2:3000/api/send-otp", { email });
+      const res = await axios.post("http://192.168.11.239:3000/api/send-otp", { email });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "ส่ง OTP ไปที่อีเมลแล้ว");
         setStep(2);
@@ -37,7 +39,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.0.2.2:3000/api/verify-otp", { email, otp });
+      const res = await axios.post("http://192.168.11.239:3000/api/verify-otp", { email, otp });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "OTP ถูกต้อง");
         setStep(3);
@@ -52,7 +54,7 @@ export default function SignupScreen({ navigation }) {
 
   // Step 3: สมัครบัญชี
   const handleRegister = async () => {
-    if (!username || !password || !confirmPassword) {
+    if (!username || !name || !password || !confirmPassword || !major) {
       Alert.alert("ผิดพลาด", "กรุณากรอกข้อมูลให้ครบ");
       return;
     }
@@ -61,10 +63,12 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.0.2.2:3000/api/register", {
-        email,
+      const res = await axios.post("http://192.168.11.239:3000/api/register", {
         username,
         password,
+        name,
+        major,
+        otp
       });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "สมัครบัญชีเรียบร้อย");
@@ -119,6 +123,18 @@ export default function SignupScreen({ navigation }) {
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Name"
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Major"
+            value={major}
+            onChangeText={setMajor}
           />
           <TextInput
             style={styles.input}

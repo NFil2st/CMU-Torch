@@ -19,11 +19,17 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 //หน้าสรุปผล
 import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
 
+// widgets
+import DailyLogWidget from '../components/common/DailyLogWidget';
+
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
 import NutritionDecrease from '../screens/Nutrition/NutritionDecrease';
+import ScanSuccess from '../screens/Nutrition/ScanSuccess';
+import CameraScreen from '../screens/Nutrition/CameraScreen';
 
+//สุขภาพจิต
 import MentalScreen from '../screens/Mental/MentalScreen';
 import MentalScreenSecond from '../screens/Mental/MentalScreenSecond';
 import MentalPositive from '../screens/Mental/MentalPositive';
@@ -67,6 +73,12 @@ export default function AppNavigator() {
           component={SignupScreen}
         />
 
+        {/* Widget Screens */}
+        <Stack.Screen
+          name="DailyLogWidget"
+          component={DailyLogWidget}
+        />
+
         {/* Main App Screens */}
         <Stack.Screen
           name="Tracker"
@@ -89,6 +101,14 @@ export default function AppNavigator() {
         <Stack.Screen
           name="NutritionDecrease"
           component={NutritionDecrease}
+        />
+        <Stack.Screen
+          name="ScanSuccess"
+          component={ScanSuccess}
+        />
+        <Stack.Screen
+          name="CameraScreen"
+          component={CameraScreen}
         />
 
         {/* Profile Screens */
@@ -120,6 +140,8 @@ export default function AppNavigator() {
           name="ExerciseRecommendation"
           component={ExerciseRecommendationScreen}
         />
+
+        {/* Mental */}
         <Stack.Screen
           name="MentalScreen"
           component={MentalScreen}

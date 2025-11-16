@@ -47,6 +47,9 @@ export default function NavBar({ navigation }) {
           <TouchableOpacity onPress={() => handleNavigate('Summarize')} style={styles.menuItem}>
             <Text style={styles.menuText}>Summarize</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigate('CameraScreen')} style={styles.menuItem}>
+            <Text style={styles.menuText}>Test scanfood</Text>
+          </TouchableOpacity>
           {/* <TouchableOpacity onPress={() => handleNavigate('Settings')} style={styles.menuItem}>
             <Text style={styles.menuText}>Settings</Text>
           </TouchableOpacity> */}
