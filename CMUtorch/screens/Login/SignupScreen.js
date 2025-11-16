@@ -64,11 +64,11 @@ export default function SignupScreen({ navigation }) {
     }
     try {
       const res = await axios.post("http://192.168.11.239:3000/api/register", {
-        email,
-        name,
         username,
         password,
-        major
+        name,
+        major,
+        otp
       });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "สมัครบัญชีเรียบร้อย");

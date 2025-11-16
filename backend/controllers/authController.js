@@ -57,17 +57,28 @@ export const verifyOtp = (req, res) => {
     return res.status(400).json({ success: false, message: "OTP ผิด" });
   }
 
-  delete otps[email];
   return res.json({ success: true });
 };
 
 export const register = async (req, res) => {
-  const { cmumail, username, password, name, major } = req.body;
+  const { username, password, name, major, otp } = req.body;
 
+  // หาอีเมลจาก OTP
+  const emailRecord = Object.entries(otps).find(
+    ([email, record]) => record.code === otp && record.expire > Date.now()
+  );
+
+  if (!emailRecord) {
+    return res.status(400).json({ success: false, message: "OTP ผิดหรือหมดอายุ" });
+  }
+
+  const [cmumail] = emailRecord;
+
+  // ตรวจสอบว่ามีผู้ใช้แล้วหรือไม่
   const { data: exists } = await supabase
     .from("User")
     .select("*")
-    .eq("email", cmumail)
+    .eq("cmumail", cmumail)
     .single();
 
   if (exists) {
@@ -85,9 +96,8 @@ export const register = async (req, res) => {
     return res.status(500).json({ success: false, message: "สมัครไม่สำเร็จ" });
   }
 
-  return res.json({ success: true });
+  return res.json({ success: true, message: "สมัครสมาชิกสำเร็จ" });
 };
-
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
@@ -106,10 +116,34 @@ export const login = async (req, res) => {
   if (!match) return res.status(400).json({ success: false, message: "รหัสผ่านผิด" });
 
   const token = jwt.sign(
-    { email: user.email, username: user.username },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+{ email: user.cmumail, username: user.username },
+    process.env.JWT_SECRET
   );
 
   return res.json({ success: true, token });
+};
+
+
+
+
+//profile controller
+export const getMe = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ success: false });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('*')
+      .eq('username', decoded.username)
+      .single();
+
+    if (error || !user) return res.status(404).json({ success: false });
+
+    return res.json({ success: true, user });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false });
+  }
 };
