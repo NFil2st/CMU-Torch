@@ -26,7 +26,10 @@ import DailyLogWidget from '../components/common/DailyLogWidget';
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
 import NutritionDecrease from '../screens/Nutrition/NutritionDecrease';
+import ScanSuccess from '../screens/Nutrition/ScanSuccess';
+import CameraScreen from '../screens/Nutrition/CameraScreen';
 
+//สุขภาพจิต
 import MentalScreen from '../screens/Mental/MentalScreen';
 import MentalScreenSecond from '../screens/Mental/MentalScreenSecond';
 import MentalPositive from '../screens/Mental/MentalPositive';
@@ -97,6 +100,14 @@ export default function AppNavigator() {
           name="NutritionDecrease"
           component={NutritionDecrease}
         />
+        <Stack.Screen
+          name="ScanSuccess"
+          component={ScanSuccess}
+        />
+        <Stack.Screen
+          name="CameraScreen"
+          component={CameraScreen}
+        />
 
         {/* Profile Screens */
           <Stack.Screen
@@ -127,6 +138,8 @@ export default function AppNavigator() {
           name="ExerciseRecommendation"
           component={ExerciseRecommendationScreen}
         />
+
+        {/* Mental */}
         <Stack.Screen
           name="MentalScreen"
           component={MentalScreen}
