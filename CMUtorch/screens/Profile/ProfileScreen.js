@@ -35,6 +35,10 @@ export default function ProfileScreen({ navigation }) {
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={() =>navigation.navigate('DailyLogWidget')}>
+        <Text style={styles.logoutText}>Widget</Text>
+      </TouchableOpacity>
     </View>
     </AppBackground>
   );
@@ -74,6 +78,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logoutButton: {
+    marginTop: 20,
     backgroundColor: '#E57373',
     paddingVertical: 15,
     paddingHorizontal: 40,
