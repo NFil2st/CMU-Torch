@@ -1,44 +1,47 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import FeatureCard from '../../components/common/NutritionCard';
+import { View, ScrollView, StyleSheet, Text, Image, Dimensions } from 'react-native';
 import BackButton from '../../components/common/BackButton';
 import AppBackgroundWithMascot from '../../components/common/AppBackgroundWithMascot';
 import NavBar from '../../components/common/NavBar';
+import NutritionCategoryCard from '../../components/common/NutritionCategoryCard';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function NutritionScreen({ navigation }) {
+    // หมวดหมู่โภชนาการ
+    const categories = [
+        { id: 1, title: 'เพิ่มน้ำหนัก', colors: ['#f24242', '#e894ff'], screen: 'NutritionList', type: 'increase' },
+        { id: 2, title: 'ลดน้ำหนัก', colors: ['#48ee6c', '#e894ff'], screen: 'NutritionList', type: 'decrease' },
+    ];
 
-    const foods = [
+    // อาหารแนะนำ
+    const recommendedFoods = [
         { id: 1, name: 'Lobster', image: require('../../assets/food/Robster.png') },
         { id: 2, name: 'Ratatuy', image: require('../../assets/food/Ratatuy.png') },
-    ];
-    const cards = [
-        {
-            title: 'เพิ่มน้ำหนัก',
-            colors: ['#f24242', '#e894ff'],
-            screen: 'NutritionIncrease'
-        },
-        {
-            title: 'ลดน้ำหนัก',
-            colors: ['#48ee6c', '#e894ff'],
-            screen: 'NutritionDecrease'
-        },
+        { id: 3, name: 'Salmon', image: require('../../assets/food/Ratatuy.png') },
     ];
 
-    return (<AppBackgroundWithMascot>
+   return (
+    <AppBackgroundWithMascot>
         <BackButton navigation={navigation} />
         <NavBar navigation={navigation} />
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={styles.container}>
+            {/* --- Speech Bubble (อาหารแนะนำ + หมวดหมู่) --- */}
             <View style={styles.speechBubble}>
                 <View style={styles.speechBubbleTail} />
-                <View style={styles.contentWrapper}>
 
-                    <Text style={styles.greeting}>เวลามีอารมณ์ดี </Text>
+                <View style={styles.contentWrapper}>
+                    {/* แนะนำอาหาร */}
+                    <Text style={styles.greeting}>เวลามีอารมณ์ดี</Text>
                     <Text style={styles.greeting}>รสจัดจะยิ่งฟินและอร่อย!</Text>
-                    <ScrollView horizontal nestedScrollEnabled showsHorizontalScrollIndicator={false} style={styles.foodScroll}>
-                        {foods.map((item) => (
+                    <ScrollView
+                        horizontal
+                        nestedScrollEnabled
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.foodScroll}
+                    >
+                        {recommendedFoods.map((item) => (
                             <View key={item.id} style={styles.foodCard}>
                                 <Image source={item.image} style={styles.foodImage} />
                                 <Text style={styles.foodName}>{item.name}</Text>
@@ -46,13 +49,16 @@ export default function NutritionScreen({ navigation }) {
                         ))}
                     </ScrollView>
 
-                    <View style={styles.grid}>
-                        {cards.map((card, index) => (
-                            <FeatureCard
-                                key={index}
-                                title={card.title}
-                                colors={card.colors}
-                                onPress={() => card.screen && navigation.navigate(card.screen)}
+                    {/* --- หมวดหมู่โภชนาการ --- */}
+                    <View style={styles.categoriesContainer}>
+                        {categories.map((cat) => (
+                            <NutritionCategoryCard
+                                key={cat.id}
+                                title={cat.title}
+                                colors={cat.colors}
+                                onPress={() =>
+                                    navigation.navigate(cat.screen, { type: cat.type, title: cat.title })
+                                }
                             />
                         ))}
                     </View>
@@ -60,41 +66,36 @@ export default function NutritionScreen({ navigation }) {
             </View>
         </ScrollView>
     </AppBackgroundWithMascot>
-    );
+);
 }
-
 const styles = StyleSheet.create({
-    fullScreenBackground: {
-        flex: 1,
-    },
     container: {
         flexGrow: 1,
-        justifyContent: 'flex-end',
-        paddingBottom: 20,
-    },
-    scrollContent: {
-        flexGrow: 1,
-        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        paddingTop: 20,
         paddingBottom: 20,
     },
 
+    // --- Speech Bubble ---
     speechBubble: {
         backgroundColor: '#fff',
-        marginHorizontal: 20,
-        borderRadius: 30,
-        height: height * 0.48,
+        marginHorizontal: 0,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        height: height * 0.5, // กรอบสีขาวอยู่ด้านล่าง 50% ของหน้าจอ
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 8,
-        justifyContent: 'flex-end',
+        overflow: 'hidden',
     },
     contentWrapper: {
-        paddingHorizontal: 15,
-        paddingTop: 30,
-        paddingBottom: 30,
         flex: 1,
+        paddingHorizontal: 15,
+        paddingVertical: 20,
     },
     speechBubbleTail: {
         position: 'absolute',
@@ -113,41 +114,43 @@ const styles = StyleSheet.create({
         borderBottomColor: 'white',
     },
 
+    // --- Greeting / แนะนำอาหาร ---
     greeting: {
-        textAlign: 'start',
-        paddingBottom: 10,
-        paddingRight: 50,
-        fontSize: 17,
-        fontWeight: '700',
+        fontSize: 16,
+        fontWeight: '600',
         color: '#333',
-    },
-    grid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        marginBottom: 10,
     },
     foodScroll: {
-        width: '100%',
-        paddingHorizontal: 9,
+        marginBottom: 15,
     },
     foodCard: {
-        height: 250,
-        width: 260,
+        width: 140,
+        height: 180,
         backgroundColor: '#fff',
         borderRadius: 15,
         marginRight: 12,
         padding: 10,
-        elevation: 3,
+        elevation: 2,
+        alignItems: 'center',
     },
     foodImage: {
         width: '100%',
-        height: '80%',
+        height: '75%',
         borderRadius: 10,
     },
     foodName: {
+        marginTop: 5,
         fontSize: 14,
         fontWeight: '600',
-        marginTop: 6,
         textAlign: 'center',
+    },
+
+    // --- Categories ---
+    categoriesContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginTop: 10,
     },
 });

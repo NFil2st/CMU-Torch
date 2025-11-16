@@ -24,8 +24,7 @@ import DailyLogWidget from '../components/common/DailyLogWidget';
 
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
-import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
-import NutritionDecrease from '../screens/Nutrition/NutritionDecrease';
+import NutritionList from '../screens/Nutrition/NutritionList';
 import ScanSuccess from '../screens/Nutrition/ScanSuccess';
 import CameraScreen from '../screens/Nutrition/CameraScreen';
 
@@ -95,12 +94,8 @@ export default function AppNavigator() {
           component={NutritionScreen}
         />
         <Stack.Screen
-          name="NutritionIncrease"
-          component={NutritionIncrease}
-        />
-        <Stack.Screen
-          name="NutritionDecrease"
-          component={NutritionDecrease}
+          name="NutritionList"
+          component={NutritionList}
         />
         <Stack.Screen
           name="ScanSuccess"
