@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Animated, Easing } from 'react-native';
 import { mascotImages } from '../../assets/config/mascotImages';
 
 const DEFAULT_COLOR = 'orange';
@@ -33,6 +33,30 @@ export default function AppBackgroundWithMascot({
   mascotMood = DEFAULT_MOOD,
   emotion,
 }) {
+  const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bounceAnim, {
+          toValue: 1,
+          duration: 1600,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(bounceAnim, {
+          toValue: 0,
+          duration: 1600,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    loop.start();
+    return () => loop.stop();
+  }, [bounceAnim]);
+
   let resolvedColor = mascotColor;
   let resolvedMood = mascotMood;
 
@@ -54,6 +78,16 @@ export default function AppBackgroundWithMascot({
     mascotImages[resolvedColor]?.[resolvedMood] ||
     fallbackImage;
 
+  const translateY = bounceAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -12],
+  });
+
+  const tilt = bounceAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: ['-2deg', '2deg', '-2deg'],
+  });
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -63,9 +97,12 @@ export default function AppBackgroundWithMascot({
         style={StyleSheet.absoluteFill}
       />
 
-      <Image
+      <Animated.Image
         source={mascotImage}
-        style={styles.mascotBg}
+        style={[
+          styles.mascotBg,
+          { transform: [{ translateY }, { rotate: tilt }] },
+        ]}
         resizeMode="contain"
         pointerEvents="none"
       />
