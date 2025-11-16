@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import AppBackground from '../../components/common/AppBackground';
+import AppBackgroundWithMascot from '../../components/common/AppBackgroundWithMascot';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,7 +27,7 @@ const cards = [
 
 export default function TrackerScreen({ navigation }) {
     return (
-        <AppBackground>
+        <AppBackgroundWithMascot>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
                 <View style={styles.speechBubble}>
@@ -57,7 +57,7 @@ export default function TrackerScreen({ navigation }) {
                 </View>
 
             </ScrollView>
-        </AppBackground>
+        </AppBackgroundWithMascot>
     );
 }
 

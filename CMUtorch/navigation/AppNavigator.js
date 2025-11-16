@@ -41,6 +41,8 @@ import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
 import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
 import ExerciseRecommendationScreen from '../screens/Exercise/ExerciseRecomman';
 
+import RankingScreen from '../screens/Ranking/RankingScreen';
+
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
@@ -155,6 +157,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="MentalNegative"
           component={MentalNegative}
+        />
+        <Stack.Screen
+          name="RankingScreen"
+          component={RankingScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

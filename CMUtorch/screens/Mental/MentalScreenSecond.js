@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import FeatureCard from '../../components/common/MentalCard';
 import BackButton from '../../components/common/BackButton';
-import AppBackground from '../../components/common/AppBackground';
+import AppBackgroundWithMascot from '../../components/common/AppBackgroundWithMascot';
 import NavBar from '../../components/common/NavBar';
 
 const { width, height } = Dimensions.get('window');
@@ -31,7 +31,7 @@ export default function MentalScreenSecond ({ navigation }) {
         },
     ];
     
-    return (<AppBackground>
+    return (<AppBackgroundWithMascot>
             <BackButton navigation={navigation} />
             <NavBar navigation={navigation} />
 
@@ -59,7 +59,7 @@ export default function MentalScreenSecond ({ navigation }) {
                 </View>
 
             </ScrollView>
-        </AppBackground>
+        </AppBackgroundWithMascot>
     );
 }
 
