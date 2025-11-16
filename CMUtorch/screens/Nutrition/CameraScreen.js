@@ -23,12 +23,12 @@ export default function CameraScreen({ navigation }) {
     try {
       const photo = await cameraRef.current.takePictureAsync({ quality: 0.7 });
 
-const form = new FormData();
-form.append("image", {
-  uri: photo.uri,
-  type: "image/jpeg",
-  name: "photo.jpg",
-});
+      const form = new FormData();
+      form.append("image", {
+        uri: photo.uri,
+        type: "image/jpeg",
+        name: "photo.jpg",
+      });
 
 
       const response = await axios.post(

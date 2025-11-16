@@ -91,6 +91,7 @@ export default function ExerciseDetailScreen({ route, navigation }) {
                   <Pressable
                     onPressIn={() => handlePressIn(index)}
                     onPressOut={() => handlePressOut(index)}
+                    onPress={() => navigation.navigate("Map", { place })}
                     style={styles.routeButtonWrapper}
                   >
                     <Animated.View style={{ transform: [{ scale: scaleAnims[index] }] }}>
