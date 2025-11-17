@@ -6,6 +6,9 @@ import Constants from "expo-constants";
 
 const API_URL = Constants.expoConfig.extra.apiUrl;
 
+console.log("API_URL =", API_URL);
+
+
 const { width, height } = Dimensions.get('window');
 
 const cards = [

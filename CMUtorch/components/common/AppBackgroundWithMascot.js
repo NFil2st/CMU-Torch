@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { View, Animated, StyleSheet, Easing } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 const mascotImages = {
   orange: {
@@ -75,7 +78,7 @@ useEffect(() => {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) return;
 
-      const res = await fetch("http://10.122.2.193:3000/api/getMood", {
+      const res = await fetch(`${API_URL}/api/getMood`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
