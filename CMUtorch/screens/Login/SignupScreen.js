@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import axios from "axios";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 export default function SignupScreen({ navigation }) {
   const [step, setStep] = useState(1); // 1: กรอกอีเมล, 2: OTP, 3: username/password
@@ -19,7 +22,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.122.2.193:3000/api/send-otp", { email });
+      const res = await axios.post(`${API_URL}/api/send-otp`, { email });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "ส่ง OTP ไปที่อีเมลแล้ว");
         setStep(2);
@@ -39,7 +42,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.122.2.193:3000/api/verify-otp", { email, otp });
+      const res = await axios.post(`${API_URL}/api/verify-otp`, { email, otp });
       if (res.data.success) {
         Alert.alert("สำเร็จ", "OTP ถูกต้อง");
         setStep(3);
@@ -63,7 +66,7 @@ export default function SignupScreen({ navigation }) {
       return;
     }
     try {
-      const res = await axios.post("http://10.122.2.193:3000/api/register", {
+      const res = await axios.post(`${API_URL}/api/register`, {
         username,
         password,
         name,

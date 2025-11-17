@@ -9,17 +9,150 @@ export default function ScanSuccess({ route }) {
   // ตอนนี้ predictions เป็น array ของชื่อ class ตรง ๆ
   const predictions = data?.predictions || [];
 
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 22, fontWeight: "bold" }}>ผลลัพธ์การสแกน</Text>
+  const foodMessages = {
+  drinks: "ดื่มน้ำให้สดชื่นหน่อยน้าา 💧",
+  steaks: "สเต๊กเนื้อฉ่ำ ๆ ได้พลังสุดๆ! 🥩",
+  shrimp: "กุ้งสดเด้งๆ เติมโปรตีนแบบจุกๆ 🦐",
+  eggs: "ไข่เต็มไปด้วยโปรตีนเลยนะ 🍳",
+  chickens: "ไก่ล่ะสุดยอดโปรตีนลีนๆ 🐔",
+  salmon: "แซลมอนโอเมก้า 3 ล้นๆ บำรุงสมองเลยน้า 🐟",
+  porks: "หมูให้พลังงานดีมากเลยนะ 🐷",
+  noodles: "เติมคาร์บแบบอร่อย ๆ ด้วยเส้น 🍜",
+  rice: "ข้าวอุ่น ๆ เติมพลังงานเต็มที่ 🍚",
+  creams: "ครีมหวาน ๆ ละมุนมากก 🍦",
+  desserts: "ขนมหอมหวาน เติมน้ำตาลให้เต็มที่เลยย 🍰",
+  breads: "ขนมปังกรอบนุ่ม กินแล้วอิ่มนาน 🥖",
+};
 
+  const grouped = predictions.reduce((acc, item) => {
+  acc[item] = (acc[item] || 0) + 1;
+  return acc;
+}, {});
+return (
+  <View style={styles.container}>
+    <Text style={styles.title}>ผลลัพธ์การสแกนอาหาร 🍽️</Text>
+
+    <View style={styles.bubble}>
       {predictions.length > 0 ? (
-        predictions.map((item, index) => (
-          <Text key={index}>🍽 {item}</Text>
+        Object.keys(grouped).map((item, index) => (
+          <View key={index} style={styles.foodItem}>
+            <Text style={styles.foodName}>
+              {item} {grouped[item] > 1 ? `x${grouped[item]}` : ""}
+            </Text>
+            <Text style={styles.foodMsg}>{foodMessages[item]}</Text>
+          </View>
         ))
       ) : (
-        <Text>ไม่พบอาหาร</Text>
+        <Text style={styles.noFood}>ไม่พบอาหาร 😢</Text>
       )}
     </View>
-  );
+
+    {/* StackFood Section */}
+    {stack !== null && (
+      <View style={{ marginTop: 40, alignItems: "center" }}>
+        <Text style={styles.stackLabel}>StackFood</Text>
+
+        <Text style={styles.stackOld}>{oldStack}</Text>
+
+        <Animated.Text
+          style={[
+            styles.stackNew,
+            { opacity: opacity, transform: [{ translateY }] },
+          ]}
+        >
+          {stack}
+        </Animated.Text>
+
+        <TouchableOpacity
+          style={styles.homeButton}
+          onPress={() => handleNavigate("Home")}
+        >
+          <Text style={styles.homeButtonText}>กลับหน้า Home</Text>
+        </TouchableOpacity>
+      </View>
+    )}
+  </View>
+);
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#FAFAFA",
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#333",
+  },
+
+  bubble: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 20,
+    width: "100%",
+    minHeight: 200,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+  },
+
+  foodItem: {
+    marginBottom: 18,
+  },
+
+  foodName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
+
+  foodMsg: {
+    fontSize: 16,
+    marginTop: 4,
+    color: "#666",
+  },
+
+  noFood: {
+    fontSize: 18,
+    textAlign: "center",
+    color: "#999",
+  },
+
+  // StackFood
+  stackLabel: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#444",
+  },
+  stackOld: {
+    fontSize: 36,
+    color: "#bbb",
+  },
+  stackNew: {
+    fontSize: 48,
+    fontWeight: "bold",
+    color: "#4CAF50",
+  },
+
+  homeButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    marginTop: 30,
+  },
+  homeButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
+});

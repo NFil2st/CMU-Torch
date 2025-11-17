@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import AppBackgroundWithMascot from '../../components/common/AppBackgroundWithMascot';
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,7 +26,7 @@ export default function TrackerScreen({ navigation }) {
       const token = await AsyncStorage.getItem('userToken');
       if (!token) return;
 
-      const res = await fetch('http://10.122.2.193:3000/api/updateMood', {
+      const res = await fetch(`${API_URL}/api/updateMood`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

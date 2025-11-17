@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppBackground from '../../components/common/AppBackground';
 import BackButton from '../../components/common/BackButton';
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 export default function ExerciseCooldown({ navigation }) {
   const [seconds, setSeconds] = useState(10);
@@ -48,7 +51,7 @@ export default function ExerciseCooldown({ navigation }) {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) return;
 
-      const res = await fetch("http://10.122.2.193:3000/api/completeExercise", {
+      const res = await fetch(`${API_URL}/api/completeExercise`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

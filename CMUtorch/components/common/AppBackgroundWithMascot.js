@@ -27,9 +27,9 @@ const mascotImages = {
 };
 
 const colorFromScore = (score) => {
-  if (score == null || score <= 10) return "orange";
-  if (score <= 30) return "red";
-  if (score <= 60) return "blue";
+  if (score == null || score < 10) return "orange";
+  if (score < 30) return "red";
+  if (score < 60) return "blue";
   return "purple";
 };
 

@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = React.useState('');
@@ -24,7 +27,7 @@ export default function LoginScreen({ navigation }) {
   }
 
   try {
-    const response = await fetch('http://10.122.2.193:3000/api/login', {
+    const response = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

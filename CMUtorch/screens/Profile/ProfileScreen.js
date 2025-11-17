@@ -5,6 +5,9 @@ import axios from 'axios';
 import AppBackground from '../../components/common/AppBackground';
 import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.apiUrl;
 
 export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
@@ -19,7 +22,7 @@ export default function ProfileScreen({ navigation }) {
           return;
         }
 
-        const res = await axios.get("http://10.122.2.193:3000/api/me", {
+        const res = await axios.get(`${API_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
