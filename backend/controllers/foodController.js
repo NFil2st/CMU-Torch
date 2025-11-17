@@ -41,3 +41,107 @@ export const completeFood = async (req, res) => {
   }
 };
 
+export const getFood = async (req, res) => {
+  try {
+    const { mood } = req.query; // ดึงค่า mood tag จาก Query Parameter
+
+    if (!mood) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Missing 'mood' query parameter." 
+        });
+    }
+
+    // 1. ดึงอาหารทั้งหมดที่มี mood_tag ตรงกัน
+    const { data: matchedFoods, error } = await supabase
+      .from("food_items")
+      .select("id, name, mood_tag, goal_tag, imagea")
+      .eq("mood_tag", mood); // คัดกรองตาม mood_tag
+
+    if (error) {
+      console.error("Supabase Error fetching food items:", error.message);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch food items.", 
+        details: error.message 
+      });
+    }
+
+    // 2. สุ่มเลือก 5 เมนูจากรายการที่คัดกรองได้
+    const shuffled = matchedFoods.sort(() => 0.5 - Math.random());
+    const recommendedFoods = shuffled.slice(0, 5); // สุ่มมา 5 เมนู
+
+    if (recommendedFoods.length === 0) {
+        // หากไม่พบอาหารที่ตรงกับอารมณ์
+        return res.json({ 
+            success: true, 
+            food_items: [],
+            message: `No food found for mood_tag: ${mood}`
+        });
+    }
+
+    // 3. ส่งข้อมูลอาหารที่สุ่มแล้วกลับไป
+    return res.json({ 
+      success: true, 
+      food_items: recommendedFoods 
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Server error." 
+    });
+  }
+};
+
+const goalTagMapping = {
+    'increase': 'เพิ่มน้ำหนัก',
+    'decrease': 'ลดน้ำหนัก',
+    'general': 'ทั่วไป',
+};
+
+export const getFoodList = async (req, res) => { 
+  try {
+    const { mood, goal } = req.query; // ดึงค่า mood และ goal tag จาก Query Parameter
+
+    if (!mood || !goal) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Missing 'mood' or 'goal' query parameter." 
+        });
+    }
+
+    // 1. แปลง Goal Tag เป็นภาษาไทย (เพื่อให้ตรงกับข้อมูลใน DB)
+    const dbGoalTag = goalTagMapping[goal] || 'ทั่วไป'; // Default เป็น 'ทั่วไป'
+
+    // 2. ดึงอาหารที่มี mood_tag และ goal_tag ตรงกัน
+    const { data: matchedFoods, error } = await supabase
+      .from("food_items")
+      .select("id, name, mood_tag, goal_tag, imagea")
+      .eq("mood_tag", mood)
+      .or(`goal_tag.eq.${dbGoalTag},goal_tag.eq.ทั่วไป`); // กรองตาม Goal หรือ 'ทั่วไป'
+
+    if (error) {
+      console.error("Supabase Error fetching food items:", error.message);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch food items.", 
+        details: error.message 
+      });
+    }
+
+    // 3. ส่งข้อมูลอาหารกลับไป
+    return res.json({ 
+      success: true, 
+      food_items: matchedFoods 
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Server error." 
+    });
+  }
+};
