@@ -137,6 +137,7 @@ cardTitle: {
     shadowRadius: 6,
     elevation: 8,
     paddingTop: 20,
+    overflow: 'hidden',
   },
 
   speechBubbleTail: {

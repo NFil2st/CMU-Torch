@@ -39,6 +39,7 @@ import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
 import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
 import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
 import ExerciseRecommendationScreen from '../screens/Exercise/ExerciseRecomman';
+import ExerciseCooldown from '../screens/Exercise/ExerciseCooldown';
 
 import RankingScreen from '../screens/Ranking/RankingScreen';
 
@@ -136,6 +137,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="ExerciseRecommendation"
           component={ExerciseRecommendationScreen}
+        />
+        <Stack.Screen
+          name="ExerciseCooldown"
+          component={ExerciseCooldown}
         />
 
         {/* Mental */}

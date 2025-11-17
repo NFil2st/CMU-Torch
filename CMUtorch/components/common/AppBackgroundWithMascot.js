@@ -86,16 +86,16 @@ export default function AppBackgroundWithMascot({ children, emotion }) {
         });
 
         const data = await res.json();
-        if (data.success && data.user) {
-          const colorScore = data.user.colorScore;
-          const moodScore = data.user.moodScore;
+        if (data.success && data.data) {
+  const stackScore = parseInt(data.data.stack, 10); // "11" → 11
+  const moodScore = parseInt(data.data.mood, 10);   // "5" → 5
 
-          const color = colorFromScore(colorScore);
-          const mood = moodFromScore(moodScore);
+  const color = colorFromScore(stackScore);
+  const mood = moodFromScore(moodScore);
 
-          setDefaultColor(color);
-          setDefaultMood(mood);
-        }
+  setDefaultColor(color);
+  setDefaultMood(mood);
+}
       } catch (err) {
         console.error("Failed to fetch user score:", err);
       }
