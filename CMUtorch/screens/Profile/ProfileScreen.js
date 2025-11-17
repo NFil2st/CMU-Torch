@@ -19,7 +19,7 @@ export default function ProfileScreen({ navigation }) {
           return;
         }
 
-        const res = await axios.get('http://192.168.11.239:3000/api/me', {
+        const res = await axios.get("http://10.122.2.193:3000/api/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
 

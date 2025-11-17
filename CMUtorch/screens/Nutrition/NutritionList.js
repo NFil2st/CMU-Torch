@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import BackButton from '../../components/common/BackButton';
 
 const foodData = {
@@ -17,15 +17,24 @@ export default function NutritionList({ route, navigation }) {
     const { type, title } = route.params;
     const foods = foodData[type] || [];
 
+    const handleFoodPress = (food) => {
+        navigation.navigate('CameraScreen', { food });
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <BackButton navigation={navigation} />
             <Text style={styles.title}>{title}</Text>
+
             {foods.map((food) => (
-                <View key={food.id} style={styles.foodCard}>
+                <TouchableOpacity
+                    key={food.id}
+                    style={styles.foodCard}
+                    onPress={() => handleFoodPress(food)}
+                >
                     <Image source={food.image} style={styles.foodImage} />
                     <Text style={styles.foodName}>{food.name}</Text>
-                </View>
+                </TouchableOpacity>
             ))}
         </ScrollView>
     );

@@ -14,6 +14,7 @@ router.post("/verify-otp", verifyOtp);
 router.post("/register", register);
 router.post("/login", login);
 router.get('/me', getMe);
+router.get('/getMood', getMe);
 
 
 export default router;

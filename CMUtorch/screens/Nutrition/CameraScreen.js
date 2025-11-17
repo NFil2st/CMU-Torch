@@ -32,7 +32,8 @@ export default function CameraScreen({ navigation }) {
 
 
       const response = await axios.post(
-        "http://192.168.11.239:3000/api/scan-food",
+        // "http://192.168.11.239:3000/api/scan-food", // เน็ตบ้านเฟิส
+        "http://10.122.2.193:3000/api/scan-food", // เน็ตมช.
         form,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

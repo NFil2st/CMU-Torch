@@ -1,40 +1,56 @@
-import React, { useEffect, useRef } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, View, Animated, Easing } from 'react-native';
-import { mascotImages } from '../../assets/config/mascotImages';
+import React, { useEffect, useRef, useState } from "react";
+import { View, Animated, StyleSheet, Easing } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const DEFAULT_COLOR = 'orange';
-const DEFAULT_MOOD = 'good';
-
-const EMOTION_VARIANTS = {
-  happy: {
-    orange: { color: 'orange', mood: 'happy' },
-    blue: { color: 'blue', mood: 'happy' },
-    red: { color: 'red', mood: 'happy' },
-    purple: { color: 'purple', mood: 'happy' },
+// แผนที่รูป mascot ล่วงหน้า
+const mascotImages = {
+  orange: {
+    sad: require("../../assets/Mascot/orange/sad/torch_orange_sad.png"),
+    good: require("../../assets/Mascot/orange/good/torch_orange_good.png"),
+    happy: require("../../assets/Mascot/orange/happy/torch_orange_happy.png"),
   },
-  good: {
-    orange: { color: 'orange', mood: 'good' },
-    blue: { color: 'blue', mood: 'good' },
-    red: { color: 'red', mood: 'good' },
-    purple: { color: 'purple', mood: 'good' },
+  red: {
+    sad: require("../../assets/Mascot/red/sad/torch_red_sad.png"),
+    good: require("../../assets/Mascot/red/good/torch_red_good.png"),
+    happy: require("../../assets/Mascot/red/happy/torch_red_happy.png"),
   },
-  sad: {
-    orange: { color: 'orange', mood: 'sad' },
-    blue: { color: 'blue', mood: 'sad' },
-    red: { color: 'red', mood: 'sad' },
-    purple: { color: 'purple', mood: 'sad' },
+  blue: {
+    sad: require("../../assets/Mascot/blue/sad/torch_blue_sad.png"),
+    good: require("../../assets/Mascot/blue/good/torch_blue_good.png"),
+    happy: require("../../assets/Mascot/blue/happy/torch_blue_happy.png"),
+  },
+  purple: {
+    sad: require("../../assets/Mascot/purple/sad/torch_purple_sad.png"),
+    good: require("../../assets/Mascot/purple/good/torch_purple_good.png"),
+    happy: require("../../assets/Mascot/purple/happy/torch_purple_happy.png"),
   },
 };
 
-export default function AppBackgroundWithMascot({
-  children,
-  mascotColor = DEFAULT_COLOR,
-  mascotMood = DEFAULT_MOOD,
-  emotion,
-}) {
+// แปลง score → color
+const colorFromScore = (score) => {
+  if (score == null || score <= 10) return "orange";
+  if (score <= 30) return "red";
+  if (score <= 60) return "blue";
+  return "purple";
+};
+
+// แปลง score → mood
+const moodFromScore = (score) => {
+  if (score == null || score <= 0) return "sad";
+  if (score === 1) return "sad";
+  if (score === 2 || score === 3) return "good";
+  if (score >= 4) return "happy";
+  return "good";
+};
+
+export default function AppBackgroundWithMascot({ children, emotion }) {
+  const [defaultColor, setDefaultColor] = useState("null");
+  const [defaultMood, setDefaultMood] = useState("null");
+
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
+  // bounce animation
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
@@ -50,33 +66,50 @@ export default function AppBackgroundWithMascot({
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
-
     loop.start();
     return () => loop.stop();
   }, [bounceAnim]);
 
-  let resolvedColor = mascotColor;
-  let resolvedMood = mascotMood;
+  // fetch user score
+  useEffect(() => {
+    const fetchUserScore = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        if (!token) return;
 
-  if (emotion && EMOTION_VARIANTS[emotion]) {
-    const variantMap = EMOTION_VARIANTS[emotion];
-    const targetVariant =
-      variantMap[mascotColor] || variantMap[DEFAULT_COLOR];
-    if (targetVariant) {
-      resolvedColor = targetVariant.color;
-      resolvedMood = targetVariant.mood;
-    }
+        const res = await fetch("http://10.122.2.193:3000/api/getMood", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        if (data.success && data.user) {
+          const colorScore = data.user.colorScore;
+          const moodScore = data.user.moodScore;
+
+          const color = colorFromScore(colorScore);
+          const mood = moodFromScore(moodScore);
+
+          setDefaultColor(color);
+          setDefaultMood(mood);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user score:", err);
+      }
+    };
+
+    fetchUserScore();
+  }, []);
+
+   if (!defaultColor || !defaultMood) {
+    return <View style={styles.container}>{children}</View>;
   }
-
-  const fallbackImage =
-    mascotImages[DEFAULT_COLOR]?.[DEFAULT_MOOD] ||
-    require('../../assets/Mascot/theme-base.png');
-
+  // เลือกรูป mascot
   const mascotImage =
-    mascotImages[resolvedColor]?.[resolvedMood] ||
-    fallbackImage;
+    mascotImages[defaultColor]?.[defaultMood]
 
   const translateY = bounceAnim.interpolate({
     inputRange: [0, 1],
@@ -85,13 +118,13 @@ export default function AppBackgroundWithMascot({
 
   const tilt = bounceAnim.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: ['-2deg', '2deg', '-2deg'],
+    outputRange: ["-2deg", "2deg", "-2deg"],
   });
 
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#A6A7FF', '#C490D1']}
+        colors={["#A6A7FF", "#C490D1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFill}
@@ -99,10 +132,7 @@ export default function AppBackgroundWithMascot({
 
       <Animated.Image
         source={mascotImage}
-        style={[
-          styles.mascotBg,
-          { transform: [{ translateY }, { rotate: tilt }] },
-        ]}
+        style={[styles.mascotBg, { transform: [{ translateY }, { rotate: tilt }] }]}
         resizeMode="contain"
         pointerEvents="none"
       />
@@ -113,22 +143,15 @@ export default function AppBackgroundWithMascot({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-  mascotBg: {
-    position: 'absolute',
-    top: 40,
-    alignSelf: 'center',
-    width: '80%',
-    height: '55%',
-    alignSelf: 'center',
-    zIndex: 1,
-    opacity: 0.95,
-  },
-  content: {
-    flex: 1,
-    zIndex: 2,
-  },
+  container: { flex: 1, overflow: "hidden" },
+mascotBg: {
+  position: "absolute",
+  top: -100,          // ย้ายขึ้นนิดหน่อย
+  width: "135%",    // ขยายเต็มหน้าจอ
+  height: "100%",    // สูงขึ้น
+  alignSelf: "center",
+  zIndex: 1,
+  opacity: 0.95,
+},
+  content: { flex: 1, zIndex: 2 },
 });
