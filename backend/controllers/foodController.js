@@ -19,7 +19,7 @@ export const completeFood = async (req, res) => {
 
     const today = new Date().toISOString().slice(0, 10);
     let newStack = 1; // เริ่มจาก 1
-    if (user.lastExerciseDate === today && typeof user.stackExercise === "number") {
+    if (user.lastFoodDate === today && typeof user.stackFood === "number") {
       // ถ้าออกกำลังกายวันนี้แล้ว → ไม่เพิ่มอีก
       return res.json({ success: true, stackFood: user.stackFood });
     } else if (user.stackFood && typeof user.stackFood === "number") {

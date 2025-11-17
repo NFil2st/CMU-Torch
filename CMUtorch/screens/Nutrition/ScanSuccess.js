@@ -2,12 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppBackground from '../../components/common/AppBackground';
-import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
+import StackColorPopup from '../../components/common/StackColorPopup';
 import Constants from "expo-constants";
 
 const API_URL = Constants.expoConfig.extra.apiUrl;
 
+const colorFromStack = (stack) => {
+  if (stack == null || stack < 10) return "orange";
+  if (stack < 30) return "red";
+  if (stack < 60) return "blue";
+  return "purple";
+};
 
 
 export default function ScanSuccess({ route, navigation }) {
@@ -76,6 +82,27 @@ export default function ScanSuccess({ route, navigation }) {
     }
   };
 
+  const [popupVisible, setPopupVisible] = useState(false);
+
+// เรียกหลัง stack ใหม่ได้แล้ว
+useEffect(() => {
+  const showOncePerColor = async () => {
+    if (stack === null) return;
+
+    const colorKey = colorFromStack(stack); // orange, red, blue, purple
+    const storageKey = `stackPopupShown_${colorKey}`; // สร้าง key ตามสี
+    const shown = await AsyncStorage.getItem(storageKey);
+
+    // แสดง popup ถ้ายังไม่เคยโชว์สำหรับสีนี้
+    if ([1, 10, 30, 60].includes(stack) && !shown) {
+      setPopupVisible(true);
+      await AsyncStorage.setItem(storageKey, "true");
+    }
+  };
+
+  showOncePerColor();
+}, [stack]);
+
   // เรียก completeFood ตอน component mount
   useEffect(() => {
     completeFood();
@@ -83,8 +110,13 @@ export default function ScanSuccess({ route, navigation }) {
 
   return (
         <AppBackground>
-      <BackButton navigation={navigation} />
       <NavBar navigation={navigation} />
+      <StackColorPopup
+  stack={stack}
+  visible={popupVisible}
+  onClose={() => setPopupVisible(false)}
+/>
+
     <View style={styles.container}>
       <Text style={styles.title}>ผลลัพธ์การสแกนอาหาร 🍽️</Text>
 

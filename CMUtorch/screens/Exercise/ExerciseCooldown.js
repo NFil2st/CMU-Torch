@@ -1,11 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppBackground from '../../components/common/AppBackground';
 import BackButton from '../../components/common/BackButton';
+import StackColorPopup from '../../components/common/StackColorPopup';
 import Constants from "expo-constants";
 
 const API_URL = Constants.expoConfig.extra.apiUrl;
+
+const colorFromStack = (stack) => {
+  if (stack == null || stack < 10) return "orange";
+  if (stack < 30) return "red";
+  if (stack < 60) return "blue";
+  return "purple";
+};
+
 
 export default function ExerciseCooldown({ navigation }) {
   const [seconds, setSeconds] = useState(10);
@@ -83,9 +92,36 @@ export default function ExerciseCooldown({ navigation }) {
     outputRange: [0, 1], // ค่อยๆ โผล่
   });
 
+const [popupVisible, setPopupVisible] = useState(false);
+
+// เรียกหลัง stack ใหม่ได้แล้ว
+useEffect(() => {
+  const showOncePerColor = async () => {
+    if (stack === null) return;
+
+    const colorKey = colorFromStack(stack); // orange, red, blue, purple
+    const storageKey = `stackPopupShown_${colorKey}`; // สร้าง key ตามสี
+    const shown = await AsyncStorage.getItem(storageKey);
+
+    // แสดง popup ถ้ายังไม่เคยโชว์สำหรับสีนี้
+    if ([1, 10, 30, 60].includes(stack) && !shown) {
+      setPopupVisible(true);
+      await AsyncStorage.setItem(storageKey, "true");
+    }
+  };
+
+  showOncePerColor();
+}, [stack]);
+
   return (
     <AppBackground>
               <BackButton navigation={navigation} />
+              <StackColorPopup
+  stack={stack}
+  visible={popupVisible}
+  onClose={() => setPopupVisible(false)}
+/>
+
     <View style={styles.container}>
       <Text style={styles.title}>Cooldown</Text>
       <Text style={styles.timer}>{seconds}s</Text>
@@ -95,7 +131,6 @@ export default function ExerciseCooldown({ navigation }) {
           <Text style={styles.buttonText}>เริ่ม</Text>
         </TouchableOpacity>
       )}
-
       {stack !== null && (
         <View style={{ marginTop: 40, alignItems: "center" }}>
           <Text style={styles.stackLabel}>StackExercise</Text>
