@@ -160,7 +160,7 @@ export const getMood = async (req, res) => {
     // 3. ดึงข้อมูล user จาก Supabase
     const { data: user, error } = await supabase
       .from("User")
-      .select("username, StackFood, mood")
+      .select("username, stackFood, mood")
       .eq("username", username)
       .single();
 
@@ -171,7 +171,7 @@ export const getMood = async (req, res) => {
       success: true,
       data: {
         username: user.username,
-        stack: user.StackFood || [],
+        stack: user.stackFood || [],
         mood: user.mood || "neutral",
       },
     });

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { View, Animated, StyleSheet, Easing } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// แผนที่รูป mascot ล่วงหน้า
 const mascotImages = {
   orange: {
     sad: require("../../assets/Mascot/orange/sad/torch_orange_sad.png"),
@@ -27,7 +26,6 @@ const mascotImages = {
   },
 };
 
-// แปลง score → color
 const colorFromScore = (score) => {
   if (score == null || score <= 10) return "orange";
   if (score <= 30) return "red";
@@ -35,22 +33,20 @@ const colorFromScore = (score) => {
   return "purple";
 };
 
-// แปลง score → mood
 const moodFromScore = (score) => {
-  if (score == null || score <= 0) return "sad";
-  if (score === 1) return "sad";
-  if (score === 2 || score === 3) return "good";
+  if (score == null || score <= 2.5) return "sad";
+  if (score > 2.5 && score < 4) return "good";  // <=4 ไม่รวม
   if (score >= 4) return "happy";
   return "good";
 };
 
-export default function AppBackgroundWithMascot({ children, emotion }) {
-  const [defaultColor, setDefaultColor] = useState("null");
-  const [defaultMood, setDefaultMood] = useState("null");
 
+export default function AppBackgroundWithMascot({ children }) {
+  const [defaultColor, setDefaultColor] = useState(null);
+  const [defaultMood, setDefaultMood] = useState(null);
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
-  // bounce animation
+  // 🔹 bounce animation
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
@@ -72,45 +68,58 @@ export default function AppBackgroundWithMascot({ children, emotion }) {
     return () => loop.stop();
   }, [bounceAnim]);
 
-  // fetch user score
-  useEffect(() => {
-    const fetchUserScore = async () => {
-      try {
-        const token = await AsyncStorage.getItem("userToken");
-        if (!token) return;
+  // 🔹 fetch user score from API
+useEffect(() => {
+  const fetchMood = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) return;
 
-        const res = await fetch("http://10.122.2.193:3000/api/getMood", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const res = await fetch("http://10.122.2.193:3000/api/getMood", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      console.log("🔹 API getMood response:", data);
 
-        const data = await res.json();
-        if (data.success && data.data) {
-  const stackScore = parseInt(data.data.stack, 10); // "11" → 11
-  const moodScore = parseInt(data.data.mood, 10);   // "5" → 5
+      if (data.success && data.data) {
+        const stackScore = parseInt(data.data.stack, 10) || 0;
+        const moodScore = parseFloat(data.data.mood) || 0;
 
-  const color = colorFromScore(stackScore);
-  const mood = moodFromScore(moodScore);
-
-  setDefaultColor(color);
-  setDefaultMood(mood);
-}
-      } catch (err) {
-        console.error("Failed to fetch user score:", err);
+        setDefaultColor(colorFromScore(stackScore));
+        setDefaultMood(moodFromScore(moodScore));
+      } else {
+        // fallback
+        setDefaultColor("orange");
+        setDefaultMood("happy");
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch mood:", err);
+      setDefaultColor("orange");
+      setDefaultMood("happy");
+    }
+  };
+  fetchMood();
+}, []);
 
-    fetchUserScore();
-  }, []);
 
-   if (!defaultColor || !defaultMood) {
+  // 🔹 debug before render
+  console.log("🔹 defaultColor:", defaultColor, "defaultMood:", defaultMood);
+
+  if (defaultColor === null || defaultMood === null) {
     return <View style={styles.container}>{children}</View>;
   }
-  // เลือกรูป mascot
-  const mascotImage =
-    mascotImages[defaultColor]?.[defaultMood]
 
+  // 🔹 เลือกรูป mascot
+  const mascotImage = mascotImages[defaultColor]?.[defaultMood];
+
+  // 🔹 ถ้า path ไม่เจอ แสดง log
+  if (!mascotImage) {
+    console.warn(
+      `🔸 Mascot image not found for color=${defaultColor}, mood=${defaultMood}`
+    );
+  }
+
+  // 🔹 animation
   const translateY = bounceAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -12],
@@ -130,12 +139,14 @@ export default function AppBackgroundWithMascot({ children, emotion }) {
         style={StyleSheet.absoluteFill}
       />
 
-      <Animated.Image
-        source={mascotImage}
-        style={[styles.mascotBg, { transform: [{ translateY }, { rotate: tilt }] }]}
-        resizeMode="contain"
-        pointerEvents="none"
-      />
+      {mascotImage && (
+        <Animated.Image
+          source={mascotImage}
+          style={[styles.mascotBg, { transform: [{ translateY }, { rotate: tilt }] }]}
+          resizeMode="contain"
+          pointerEvents="none"
+        />
+      )}
 
       <View style={styles.content}>{children}</View>
     </View>
@@ -144,14 +155,14 @@ export default function AppBackgroundWithMascot({ children, emotion }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, overflow: "hidden" },
-mascotBg: {
-  position: "absolute",
-  top: -100,          // ย้ายขึ้นนิดหน่อย
-  width: "135%",    // ขยายเต็มหน้าจอ
-  height: "100%",    // สูงขึ้น
-  alignSelf: "center",
-  zIndex: 1,
-  opacity: 0.95,
-},
+  mascotBg: {
+    position: "absolute",
+    top: -100,
+    width: "135%",
+    height: "100%",
+    alignSelf: "center",
+    zIndex: 1,
+    opacity: 0.95,
+  },
   content: { flex: 1, zIndex: 2 },
 });
