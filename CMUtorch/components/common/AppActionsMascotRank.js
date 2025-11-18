@@ -7,10 +7,10 @@ import Constants from "expo-constants";
 const API_URL = Constants.expoConfig.extra.apiUrl;
 
 const mascotImages = {
-  orange:require("../../assets/Mascot/orange/takephoto/torch_orange_takephoto.png"),
-  red:require("../../assets/Mascot/red/takephoto/torch_red_takephoto.png"),
-  blue:require("../../assets/Mascot/blue/takephoto/torch_blue_takephoto.png"),
-  purple:require("../../assets/Mascot/purple/takephoto/torch_purple_takephoto.png")
+  orange:require("../../assets/Mascot/orange/rank/torch_orange_rank.png"),
+  red:require("../../assets/Mascot/red/rank/torch_red_rank.png"),
+  blue:require("../../assets/Mascot/blue/rank/torch_blue_rank.png"),
+  purple:require("../../assets/Mascot/purple/rank/torch_purple_rank.png"),
 };
 
 const colorFromScore = (score) => {
