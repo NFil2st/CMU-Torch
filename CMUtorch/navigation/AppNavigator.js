@@ -30,7 +30,6 @@ import CameraScreen from '../screens/Nutrition/CameraScreen';
 
 //สุขภาพจิต
 import MentalScreen from '../screens/Mental/MentalScreen';
-import MentalScreenSecond from '../screens/Mental/MentalScreenSecond';
 import MentalPositive from '../screens/Mental/MentalPositive';
 import MentalNegative from '../screens/Mental/MentalNegative';
 
@@ -148,10 +147,6 @@ export default function AppNavigator() {
         <Stack.Screen
           name="MentalScreen"
           component={MentalScreen}
-        />
-        <Stack.Screen
-          name="MentalScreenSecond"
-          component={MentalScreenSecond}
         />
         <Stack.Screen
           name="MentalPositive"
