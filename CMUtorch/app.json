@@ -4,17 +4,21 @@
     "slug": "CMUtorch",
     "version": "1.0.0",
     "orientation": "portrait",
+
     "icon": "./assets/torch-logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+
     "splash": {
       "image": "./assets/torch-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/torch-logo.png",
@@ -22,8 +26,13 @@
       },
       "edgeToEdgeEnabled": true
     },
+
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+
+    "extra": {
+      "apiUrl": "http://192.168.10.231:3000"
     }
   }
 }

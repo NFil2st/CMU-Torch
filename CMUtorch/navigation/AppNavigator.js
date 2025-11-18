@@ -24,8 +24,7 @@ import DailyLogWidget from '../components/common/DailyLogWidget';
 
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
-import NutritionIncrease from '../screens/Nutrition/NutritionIncrease';
-import NutritionDecrease from '../screens/Nutrition/NutritionDecrease';
+import NutritionList from '../screens/Nutrition/NutritionList';
 import ScanSuccess from '../screens/Nutrition/ScanSuccess';
 import CameraScreen from '../screens/Nutrition/CameraScreen';
 
@@ -39,8 +38,11 @@ import ExerciseScreen from '../screens/Exercise/ExerciseScreen';
 import ExerciseListScreen from '../screens/Exercise/ExerciseListScreen';
 import ExerciseDetailScreen from '../screens/Exercise/ExerciseDetailScreen';
 import ExerciseRecommendationScreen from '../screens/Exercise/ExerciseRecomman';
+import ExerciseCooldown from '../screens/Exercise/ExerciseCooldown';
 
 import RankingScreen from '../screens/Ranking/RankingScreen';
+
+import Map from '../screens/Map/Map';
 
 const Stack = createNativeStackNavigator();
 
@@ -94,12 +96,8 @@ export default function AppNavigator() {
           component={NutritionScreen}
         />
         <Stack.Screen
-          name="NutritionIncrease"
-          component={NutritionIncrease}
-        />
-        <Stack.Screen
-          name="NutritionDecrease"
-          component={NutritionDecrease}
+          name="NutritionList"
+          component={NutritionList}
         />
         <Stack.Screen
           name="ScanSuccess"
@@ -139,6 +137,10 @@ export default function AppNavigator() {
           name="ExerciseRecommendation"
           component={ExerciseRecommendationScreen}
         />
+        <Stack.Screen
+          name="ExerciseCooldown"
+          component={ExerciseCooldown}
+        />
 
         {/* Mental */}
         <Stack.Screen
@@ -156,6 +158,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="RankingScreen"
           component={RankingScreen}
+        />
+        <Stack.Screen
+          name="Map"
+          component={Map}
         />
       </Stack.Navigator>
     </NavigationContainer>

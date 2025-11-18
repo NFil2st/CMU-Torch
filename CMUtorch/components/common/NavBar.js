@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NavBar({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -28,6 +29,15 @@ export default function NavBar({ navigation }) {
     navigation.navigate(screen);
   };
 
+   const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* ปุ่มเบอร์เกอร์ */}
@@ -47,8 +57,8 @@ export default function NavBar({ navigation }) {
           <TouchableOpacity onPress={() => handleNavigate('Summarize')} style={styles.menuItem}>
             <Text style={styles.menuText}>Summarize</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleNavigate('CameraScreen')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Test scanfood</Text>
+          <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={() => handleNavigate('Settings')} style={styles.menuItem}>
             <Text style={styles.menuText}>Settings</Text>

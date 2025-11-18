@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { scanFood } from "../controllers/scanController.js";
+import { handleRoboflowWebhook } from "../controllers/scanController.js";
 
 const upload = multer({ dest: "uploads/" });
 const router = express.Router();
