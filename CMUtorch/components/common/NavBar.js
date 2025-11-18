@@ -29,15 +29,6 @@ export default function NavBar({ navigation }) {
     navigation.navigate(screen);
   };
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('userToken');
-      navigation.replace('Login');
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       {/* ปุ่มเบอร์เกอร์ */}
@@ -57,15 +48,9 @@ export default function NavBar({ navigation }) {
           <TouchableOpacity onPress={() => handleNavigate('Summarize')} style={styles.menuItem}>
             <Text style={styles.menuText}>Summarize</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleNavigate('About')} style={styles.menuItem}>
-            <Text style={styles.menuText}>About us</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-            <Text style={styles.menuText}>Logout</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => handleNavigate('Settings')} style={styles.menuItem}>
+          <TouchableOpacity onPress={() => handleNavigate('Settings')} style={styles.menuItem}>
             <Text style={styles.menuText}>Settings</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </Animated.View>
       )}
     </View>

@@ -147,7 +147,10 @@ export const getMe = async (req, res) => {
     return res.status(500).json({ success: false });
   }
 };
-export const getMood = async (req, res) => {
+
+
+
+export const getMoodFood = async (req, res) => {
   try {
     // 1. ดึง token จาก header
     const token = req.headers.authorization?.split(" ")[1];
@@ -181,3 +184,69 @@ export const getMood = async (req, res) => {
   }
 };
 
+export const getMoodExercise = async (req, res) => {
+  try {
+    // 1. ดึง token จาก header
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ success: false, message: "No token" });
+
+    // 2. ตรวจสอบ token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const username = decoded.username;
+
+    // 3. ดึงข้อมูล user จาก Supabase
+    const { data: user, error } = await supabase
+      .from("User")
+      .select("username, stackExercise, mood")
+      .eq("username", username)
+      .single();
+
+    if (error || !user) return res.status(404).json({ success: false, message: "User not found" });
+
+    // 4. คืนค่า StackFood และ Mood
+    return res.json({
+      success: true,
+      data: {
+        username: user.username,
+        stack: user.stackExercise || [],
+        mood: user.mood || "neutral",
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getMood = async (req, res) => {
+  try {
+    // 1. ดึง token จาก header
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ success: false, message: "No token" });
+
+    // 2. ตรวจสอบ token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const username = decoded.username;
+
+    // 3. ดึงข้อมูล user จาก Supabase
+    const { data: user, error } = await supabase
+      .from("User")
+      .select("username, mood")
+      .eq("username", username)
+      .single();
+
+    if (error || !user) return res.status(404).json({ success: false, message: "User not found" });
+
+    // 4. คืนค่า StackFood และ Mood
+    return res.json({
+      success: true,
+      data: {
+        username: user.username,
+        mood: user.mood || "neutral",
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};

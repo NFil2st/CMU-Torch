@@ -75,22 +75,27 @@ export default function AppBackgroundWithMascot({ children }) {
 useEffect(() => {
   const fetchMood = async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken"); // ตัว token ที่ login ได้มา
-if (!token) {
-  console.log("No token found");
-  return;
-}
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        console.log("No token found");
+        return;
+      }
 
-const res = await fetch(`${API_URL}/api/getMood`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`  // ต้องมีคำว่า Bearer
-  }
-});
+      // 🔹 load stack from AsyncStorage
+      const userStack = (await AsyncStorage.getItem("userStack")) || "food";
+      const endpoint =
+        userStack === "exercise" ? "/api/getMoodExercise" : "/api/getMoodFood";
 
-const data = await res.json();
-      console.log("🔹 API getMood response:", data);
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(`🔹 API ${endpoint} response:`, data);
 
       if (data.success && data.data) {
         const stackScore = parseInt(data.data.stack, 10) || 0;
@@ -99,7 +104,6 @@ const data = await res.json();
         setDefaultColor(colorFromScore(stackScore));
         setDefaultMood(moodFromScore(moodScore));
       } else {
-        // fallback
         setDefaultColor("orange");
         setDefaultMood("happy");
       }
@@ -109,8 +113,10 @@ const data = await res.json();
       setDefaultMood("happy");
     }
   };
+
   fetchMood();
 }, []);
+
 
 
   // 🔹 debug before render

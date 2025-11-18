@@ -5,7 +5,9 @@ import {
   register,
   login,
   getMe,
-  getMood,
+  getMoodFood,
+  getMoodExercise,
+  getMood
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -15,7 +17,8 @@ router.post("/verify-otp", verifyOtp);
 router.post("/register", register);
 router.get('/me', getMe);
 router.post("/login", login);
+router.get("/getMoodFood", getMoodFood);
+router.get("/getMoodExercise", getMoodExercise);
 router.get("/getMood", getMood);
-
 
 export default router;

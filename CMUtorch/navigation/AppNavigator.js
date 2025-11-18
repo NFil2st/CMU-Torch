@@ -46,6 +46,10 @@ import RankingScreen from '../screens/Ranking/RankingScreen';
 import Map from '../screens/Map/Map';
 import mapFood from '../screens/Map/mapFood';
 
+import settingScreen from '../screens/Setting/settingScreen';
+
+import AboutScreen from '../screens/About/AboutScreen';
+
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
@@ -173,6 +177,16 @@ export default function AppNavigator() {
         <Stack.Screen
           name="mapFood"
           component={mapFood}
+        />
+
+        {/* Setting Screen */}
+        <Stack.Screen
+          name="Settings"
+          component={settingScreen}
+        />
+        <Stack.Screen
+          name="AboutMe"
+          component={AboutScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
