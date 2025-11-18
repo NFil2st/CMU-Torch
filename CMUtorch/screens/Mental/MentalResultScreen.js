@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-import AppBackgroundWithMascot from "../../components/common/AppBackgroundWithMascot";
+import AppBackgroundWithMascot from "../../components/common/AppActionsMascotHeart";
 import BackButton from "../../components/common/BackButton";
 import NavBar from "../../components/common/NavBar";
 

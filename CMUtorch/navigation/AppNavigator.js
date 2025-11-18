@@ -48,8 +48,6 @@ import mapFood from '../screens/Map/mapFood';
 
 import settingScreen from '../screens/Setting/settingScreen';
 
-import AboutScreen from '../screens/About/AboutScreen';
-
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {

@@ -49,26 +49,29 @@ useEffect(() => {
   const fetchMood = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-if (!token) {
-  console.log("No token found");
-  return;
-}
+      if (!token) {
+        console.log("No token found");
+        return;
+      }
 
-const res = await fetch(`${API_URL}/api/getMood`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`
-  }
-});
+      // 🔹 load stack from AsyncStorage
+      const userStack = (await AsyncStorage.getItem("userStack")) || "food";
+      const endpoint =
+        userStack === "exercise" ? "/api/getMoodExercise" : "/api/getMoodFood";
 
-const data = await res.json();
-console.log(data);
-      console.log("🔹 API getMood response:", data);
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(`🔹 API ${endpoint} response:`, data);
 
       if (data.success && data.data) {
         const stackScore = parseInt(data.data.stack, 10) || 0;
-        const moodScore = parseFloat(data.data.mood) || 0;
 
         setDefaultColor(colorFromScore(stackScore));
       } else {
@@ -79,6 +82,7 @@ console.log(data);
       setDefaultColor("orange");
     }
   };
+
   fetchMood();
 }, []);
 

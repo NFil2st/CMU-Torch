@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import AppBackground from '../../components/common/AppBackgroundWithMascot';
+import AppBackground from '../../components/common/AppActionsMascotRun';
 import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
 
