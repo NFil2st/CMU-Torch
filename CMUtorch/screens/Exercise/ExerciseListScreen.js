@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import FeatureCard from '../../components/common/ExerciseCard';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';

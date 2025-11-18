@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import FeatureCard from '../../components/common/ExerciseCard';
 import BackButton from '../../components/common/BackButton';
 import AppBackground from '../../components/common/AppBackground';
@@ -10,18 +10,18 @@ const { width, height } = Dimensions.get('window');
 export default function ExerciseRecommendationScreen({ navigation }) {
 
   // ตัวอย่างภาพ Exercise (อาจใช้ไอคอนหรือรูปจริง)
-  const exercisesPreview = [
-    { id: 1, name: 'บาสเกตบอล', image: require('../../assets/favicon.png') },
-    { id: 2, name: 'ว่ายน้ำ', image: require('../../assets/favicon.png') },
-    { id: 3, name: 'โยคะ', image: require('../../assets/favicon.png') },
-  ];
+// เปลี่ยน exercisesPreview และ categories เป็นอิโมจิ
+const exercisesPreview = [
+  { id: 1, name: 'บาสเกตบอล', emoji: '🏀' },
+  { id: 2, name: 'ว่ายน้ำ', emoji: '🏊‍♂️' },
+  { id: 3, name: 'โยคะ', emoji: '🧘‍♀️' },
+];
 
-  // ประเภทการออกกำลังกาย (Feature Card)
-  const categories = [
-    { title: 'คาร์ดิโอ', image: require('../../assets/favicon.png'), screen: 'ExerciseList' },
-    { title: 'เวทเทรนนิ่ง', image: require('../../assets/favicon.png'), screen: 'ExerciseList' },
-    { title: 'ยืดเหยียด/โยคะ', image: require('../../assets/favicon.png'), screen: 'ExerciseList' },
-  ];
+const categories = [
+  { title: 'คาร์ดิโอ', emoji: '🏃‍♂️', screen: 'ExerciseList' },
+  { title: 'เวทเทรนนิ่ง', emoji: '🏋️‍♀️', screen: 'ExerciseList' },
+  { title: 'ยืดเหยียด/โยคะ', emoji: '🤸‍♂️', screen: 'ExerciseList' },
+];
 
   return (
     <AppBackground>
@@ -37,34 +37,53 @@ export default function ExerciseRecommendationScreen({ navigation }) {
 
             {/* ScrollView แนวนอนแสดง Exercise Preview */}
             <ScrollView
-              horizontal
-              nestedScrollEnabled
-              showsHorizontalScrollIndicator={false}
-              style={styles.exerciseScroll}
-            >
-              {exercisesPreview.map((item) => (
-                <View key={item.id} style={styles.exerciseCard}>
-                  <Image source={item.image} style={styles.exerciseImage} />
-                  <Text style={styles.exerciseName}>{item.name}</Text>
-                </View>
-              ))}
-            </ScrollView>
+  horizontal
+  nestedScrollEnabled
+  showsHorizontalScrollIndicator={false}
+  style={styles.exerciseScroll}
+>
+  {exercisesPreview.map((card) => (
+    <TouchableOpacity
+      key={card.id}
+      style={styles.exerciseCard}
+      onPress={() => navigation.navigate('ExerciseDetail', { 
+  exercise: { 
+    title: card.name || card.title,  // ใช้ name สำหรับ exercises, title สำหรับ categories
+    emoji: card.emoji 
+  } 
+})}
 
+    >
+      <Text style={styles.exerciseEmoji}>{card.emoji}</Text>
+      <Text style={styles.exerciseName}>{card.name}</Text>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
 
             <Text style={styles.greeting}>ลองดูประเภทที่เหมาะกับคุณ!</Text>
             <ScrollView
-              horizontal
-              nestedScrollEnabled
-              showsHorizontalScrollIndicator={false}
-              style={styles.exerciseScroll}
-            >
-              {categories.map((item) => (
-                <View key={item.title} style={styles.exerciseCard}>
-                  <Image source={item.image} style={styles.exerciseImage} />
-                  <Text style={styles.exerciseName}>{item.title}</Text>
-                </View>
-              ))}
-            </ScrollView>
+  horizontal
+  nestedScrollEnabled
+  showsHorizontalScrollIndicator={false}
+  style={styles.exerciseScroll}
+>
+  {categories.map((card) => (
+    <TouchableOpacity
+      key={card.title}
+      style={styles.exerciseCard}
+      onPress={() => navigation.navigate('ExerciseDetail', { 
+  exercise: { 
+    title: card.name || card.title,  // ใช้ name สำหรับ exercises, title สำหรับ categories
+    emoji: card.emoji 
+  } 
+})}
+
+    >
+      <Text style={styles.exerciseEmoji}>{card.emoji}</Text>
+      <Text style={styles.exerciseName}>{card.title}</Text>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
 
           </View>
         </View>
@@ -145,4 +164,10 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: 'center',
   },
+  exerciseEmoji: {
+  fontSize: 60,      // ขนาดใหญ่พอดี
+  textAlign: 'center',
+  marginBottom: 10,
+},
+
 });

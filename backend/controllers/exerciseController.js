@@ -4,10 +4,23 @@ import { supabase } from "../config/supabase.js";
 
 export const completeExercise = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
+if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  return res.status(401).json({ success: false, message: "Token missing or malformed" });
+}
+
+const token = authHeader.split(" ")[1];
+
     if (!token) return res.status(401).json({ success: false });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+try {
+  decoded = jwt.verify(token, process.env.JWT_SECRET);
+} catch (err) {
+  console.error("JWT Error:", err);
+  return res.status(401).json({ success: false, message: "Invalid token" });
+}
+
 
     const { data: user, error } = await supabase
       .from("User")

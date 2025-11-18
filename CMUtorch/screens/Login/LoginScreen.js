@@ -9,17 +9,6 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const handleLogintest = async () => {
-    // ตัวอย่าง login ง่าย ๆ
-    if (username && password) {
-        await AsyncStorage.setItem('userToken', '12345'); // save token
-        const expireTime = Date.now() +  3 * 60 * 1000; // นาาที x 60 วิ x 1000 ms
-        await AsyncStorage.setItem('tokenExpire', expireTime.toString());
-        navigation.replace('Tracker'); // ไปหน้า Tracker
-    } else {
-      alert('กรุณากรอก username และ password');
-    }
-  };
   const handleLogin = async () => {
   if (!username || !password) {
     alert('กรุณากรอก username และ password');
@@ -75,11 +64,8 @@ export default function LoginScreen({ navigation }) {
         value={password} 
         onChangeText={setPassword} 
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogintest}>
-        <Text style={styles.buttonText}>Login สำหรับเทส</Text>
-      </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login สำหรับเชื่อมต่อกับหลังบ้านจริงๆ</Text>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity
   style={[styles.button, { backgroundColor: '#FFA500', marginTop: 10 }]}
