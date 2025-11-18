@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 // import FeatureCard from '../../components/common/ExerciseCard'; // ไม่ได้ใช้ FeatureCard ในหน้านี้
 import BackButton from '../../components/common/BackButton';
-import AppBackground from '../../components/common/AppBackground';
+import AppBackground from '../../components/common/AppBackgroundWithMascot';
 import NavBar from '../../components/common/NavBar';
 import Constants from 'expo-constants'; // ต้องมี expo-constants
 import AsyncStorage from "@react-native-async-storage/async-storage"; // ต้องมี AsyncStorage
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 30,
-    height: height * 0.7,
+    height: height * 0.5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -247,8 +247,8 @@ const styles = StyleSheet.create({
     maxHeight: 200, 
   },
   exerciseCard: {
-    height: 160, // ปรับความสูงเล็กน้อย
-    width: 140,  // ปรับความกว้างเล็กน้อย
+    height: 100, // ปรับความสูงเล็กน้อย
+    width: 150,  // ปรับความกว้างเล็กน้อย
     backgroundColor: '#f5f5f5', // เปลี่ยนสีพื้นหลังให้ดูเป็น Card
     borderRadius: 15,
     marginRight: 10,

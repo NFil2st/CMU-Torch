@@ -1,44 +1,109 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import AppBackground from '../../components/common/AppBackground';
 import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
+const API_URL = Constants.expoConfig.extra.apiUrl;
 const screenWidth = Dimensions.get('window').width;
 
 export default function SummarizeScreen({ navigation }) {
-  // =============== MOCK DATA ===============
-  const dailyEmotions = [3, 4, 2, 5, 4, 1, 3]; // 7 วัน
-  const avgWeek = dailyEmotions.reduce((a, b) => a + b, 0) / dailyEmotions.length;
+  const [dailyHistory, setDailyHistory] = useState({});
+  const [daily7, setDaily7] = useState([0, 0, 0, 0, 0, 0, 0]);
+  const [weekAvg, setWeekAvg] = useState(0);
+  const [monthAvg, setMonthAvg] = useState(0);
 
-  const weeklyEmotions = [avgWeek, 3.5, 4.2, 2.8];
-  const avgMonth = weeklyEmotions.reduce((a, b) => a + b, 0) / weeklyEmotions.length;
+  // ==========================
+  // ฟังก์ชัน fetch data จาก backend
+  // ==========================
+  const fetchMoods = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
 
-  // =============== CHART DATA ===============
+      const res = await fetch(`${API_URL}/api/get-moods`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      console.log('Mood API:', data);
+      return data;
+    } catch (err) {
+      console.error(err);
+      return { success: false };
+    }
+  };
+
+  // ==========================
+  // โหลดข้อมูลตอน mount
+  // ==========================
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchMoods();
+      if (data.success) {
+        setDailyHistory(data.dailyMoodHistory || {});
+        setWeekAvg(data.moodweek || 0);
+        setMonthAvg(data.moodmonth || 0);
+      }
+    };
+    loadData();
+  }, []);
+
+  // ==========================
+  // คำนวณ daily7 ทุกครั้งที่ dailyHistory เปลี่ยน
+  // ==========================
+  useEffect(() => {
+    const getDailyLast7Days = () => {
+      const today = new Date();
+      const last7 = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+
+        if (dailyHistory[key] && dailyHistory[key].length > 0) {
+          const avg =
+            dailyHistory[key].reduce((a, b) => a + b, 0) /
+            dailyHistory[key].length;
+          last7.push(avg);
+        } else {
+          last7.push(0);
+        }
+      }
+
+      return last7;
+    };
+
+    setDaily7(getDailyLast7Days());
+  }, [dailyHistory]);
+
+  // ==========================
+  // กำหนด chart data
+  // ==========================
   const dailyChartData = {
-    labels: ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'],
-    datasets: [{ data: dailyEmotions }],
+    labels: ['จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส', 'อา'],
+    datasets: [{ data: daily7 }],
   };
 
   const weeklyChartData = {
-    labels: ['สัปดาห์ 1', 'สัปดาห์ 2', 'สัปดาห์ 3', 'สัปดาห์ 4'],
-    datasets: [{ data: weeklyEmotions }],
+    labels: ['ค่าเฉลี่ยล่าสุด'],
+    datasets: [{ data: [weekAvg] }],
   };
 
   const monthlyChartData = {
     labels: ['เดือนนี้'],
-    datasets: [{ data: [avgMonth] }],
+    datasets: [{ data: [monthAvg] }],
   };
 
   const chartConfig = {
     backgroundGradientFrom: '#ffffff',
     backgroundGradientTo: '#ffffff',
     color: (opacity = 1) => `rgba(166, 109, 187, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    strokeWidth: 2,
-    barPercentage: 0.5,
+    labelColor: () => '#333',
     decimalPlaces: 1,
+    barPercentage: 0.5,
   };
 
   return (
@@ -46,7 +111,6 @@ export default function SummarizeScreen({ navigation }) {
       <BackButton navigation={navigation} />
       <NavBar navigation={navigation} />
 
-      {/* กรอบสีขาวด้านล่าง */}
       <View style={styles.whiteContainer}>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -55,7 +119,7 @@ export default function SummarizeScreen({ navigation }) {
           <Text style={styles.title}>สรุปผลอารมณ์</Text>
 
           {/* ==== รายวัน ==== */}
-          <Text style={styles.sectionTitle}>รายวัน</Text>
+          <Text style={styles.sectionTitle}>รายวัน (ย้อนหลัง 7 วัน)</Text>
           <BarChart
             data={dailyChartData}
             width={screenWidth - 60}
@@ -70,7 +134,7 @@ export default function SummarizeScreen({ navigation }) {
           <BarChart
             data={weeklyChartData}
             width={screenWidth - 60}
-            height={220}
+            height={180}
             chartConfig={chartConfig}
             style={styles.chart}
             fromZero
@@ -81,15 +145,15 @@ export default function SummarizeScreen({ navigation }) {
           <BarChart
             data={monthlyChartData}
             width={screenWidth - 60}
-            height={220}
+            height={180}
             chartConfig={chartConfig}
             style={styles.chart}
             fromZero
           />
 
           <Text style={styles.summaryText}>
-            ค่าเฉลี่ยรายวัน: {avgWeek.toFixed(2)} {'\n'}
-            ค่าเฉลี่ยรายเดือน: {avgMonth.toFixed(2)}
+            ค่าเฉลี่ยรายสัปดาห์: {weekAvg.toFixed(2)} {'\n'}
+            ค่าเฉลี่ยรายเดือน: {monthAvg.toFixed(2)}
           </Text>
         </ScrollView>
       </View>

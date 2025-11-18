@@ -161,3 +161,86 @@ export const getExercise = async (req, res) => {
         });
     }
 };
+/**
+ * @description: Controller สำหรับดึงสถานที่ออกกำลังกายตามชื่อกีฬา
+ * @route: GET/POST /api/exercises/places?title=X
+ */
+export const getExercisePlaces = async (req, res) => {
+  // รับชื่อกีฬาจาก Query Parameter (ถ้าใช้ GET) หรือ Body (ถ้าใช้ POST)
+  const exerciseTitle = req.query.title || req.body.exerciseTitle; 
+
+  if (!exerciseTitle) {
+      return res.status(400).json({ 
+          success: false, 
+          message: "Missing 'title' or 'exerciseTitle' parameter." 
+      });
+  }
+
+  try {
+    // 1. ดึง sport_id จากตาราง 'sports'
+    const { data: sportData, error: sportError } = await supabase
+      .from('sports')
+      .select('id')
+      .eq('name', exerciseTitle)
+      .single();
+
+    if (sportError || !sportData) {
+      if (sportError && sportError.code !== 'PGRST116') { // PGRST116 คือไม่พบข้อมูล
+          console.error('Supabase Error fetching sport ID:', sportError);
+          return res.status(500).json({ success: false, message: "Database query failed for sport ID." });
+      }
+      // ไม่พบกีฬา → ส่ง array ว่าง
+      return res.json({ success: true, data: [], message: `Sport '${exerciseTitle}' not found.` });
+    }
+
+    const sportId = sportData.id;
+    
+    // 2. ดึง location_id ทั้งหมดจากตาราง 'sports_location' 
+    const { data: sportLocationData, error: sportLocationError } = await supabase
+      .from('sports_location')
+      .select('location_id')
+      .eq('sport_id', sportId);
+
+    if (sportLocationError) {
+      console.error('Supabase Error fetching sports_location:', sportLocationError);
+      return res.status(500).json({ success: false, message: "Database query failed for sport locations link." });
+    }
+
+    const locationIds = sportLocationData.map(item => item.location_id);
+
+    if (locationIds.length === 0) {
+      return res.json({ success: true, data: [], message: `No locations linked to sport '${exerciseTitle}'.` });
+    }
+
+    // 3. ดึงข้อมูลสถานที่ (location) 
+    const { data: locationsData, error: locationsError } = await supabase
+      .from('locations')
+      // เลือก name, open_time, close_time ตามที่คุณกำหนด
+      .select('name, hours, latitude, longitude') 
+      .in('id', locationIds);
+
+    if (locationsError) {
+      console.error('Supabase Error fetching locations:', locationsError);
+      return res.status(500).json({ success: false, message: "Database query failed for locations data." });
+    }
+
+    // 4. แปลงรูปแบบข้อมูลให้เป็นตามที่ Frontend คาดหวัง
+    const formattedPlaces = locationsData.map(location => ({
+      name: location.name,
+        hours: location.hours,
+        latitude: location.latitude,
+        longitude: location.longitude
+    }));
+
+    // 5. ส่ง Response สำเร็จ
+    return res.json({ 
+      success: true, 
+      data: formattedPlaces,
+      message: "Exercise places fetched successfully."
+    });
+
+  } catch (e) {
+    console.error('Unexpected error in getExercisePlaces:', e);
+    return res.status(500).json({ success: false, message: "An internal server error occurred." });
+  }
+};
