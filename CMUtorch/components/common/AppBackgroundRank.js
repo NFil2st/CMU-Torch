@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     width: '180%',
     height: 350,
     alignSelf: 'center',
-    zIndex: 1,
     opacity: 1,
   },
 });

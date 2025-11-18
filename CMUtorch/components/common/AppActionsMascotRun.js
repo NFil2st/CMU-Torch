@@ -7,26 +7,10 @@ import Constants from "expo-constants";
 const API_URL = Constants.expoConfig.extra.apiUrl;
 
 const mascotImages = {
-  orange: {
-    run: require("../../assets/Mascot/orange/run/torch_orange_run.png"),
-    takephoto: require("../../assets/Mascot/orange/good/torch_orange_good.png"),
-    eyeheart: require("../../assets/Mascot/orange/happy/torch_orange_happy.png"),
-  },
-  red: {
-    run: require("../../assets/Mascot/red/run/torch_red_run.png"),
-    takephoto: require("../../assets/Mascot/red/good/torch_red_good.png"),
-    eyeheart: require("../../assets/Mascot/red/happy/torch_red_happy.png"),
-  },
-  blue: {
-    run: require("../../assets/Mascot/blue/run/torch_blue_run.png"),
-    takephoto: require("../../assets/Mascot/blue/good/torch_blue_good.png"),
-    eyeheart: require("../../assets/Mascot/blue/happy/torch_blue_happy.png"),
-  },
-  purple: {
-    run: require("../../assets/Mascot/purple/run/torch_purple_run.png"),
-    takephoto: require("../../assets/Mascot/purple/good/torch_purple_good.png"),
-    eyeheart: require("../../assets/Mascot/purple/happy/torch_purple_happy.png"),
-  },
+  orange:require("../../assets/Mascot/orange/run/torch_orange_run.png"),
+  red:require("../../assets/Mascot/red/run/torch_red_run.png"),
+  blue:require("../../assets/Mascot/blue/run/torch_blue_run.png"),
+  purple:require("../../assets/Mascot/purple/run/torch_purple_run.png")
 };
 
 const colorFromScore = (score) => {
@@ -44,9 +28,8 @@ const moodFromScore = (score) => {
 };
 
 
-export default function AppBackgroundWithMascot({ children }) {
+export default function AppActionsMascotRun({ children }) {
   const [defaultColor, setDefaultColor] = useState(null);
-  const [defaultMood, setDefaultMood] = useState(null);
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   // 🔹 bounce animation
@@ -98,16 +81,13 @@ console.log(data);
         const moodScore = parseFloat(data.data.mood) || 0;
 
         setDefaultColor(colorFromScore(stackScore));
-        setDefaultMood(moodFromScore(moodScore));
       } else {
         // fallback
         setDefaultColor("orange");
-        setDefaultMood("happy");
       }
     } catch (err) {
       console.error("Failed to fetch mood:", err);
       setDefaultColor("orange");
-      setDefaultMood("happy");
     }
   };
   fetchMood();
@@ -115,14 +95,14 @@ console.log(data);
 
 
   // 🔹 debug before render
-  console.log("🔹 defaultColor:", defaultColor, "defaultMood:", defaultMood);
+  console.log("🔹 defaultColor:", defaultColor);
 
-  if (defaultColor === null || defaultMood === null) {
+  if (defaultColor === null) {
     return <View style={styles.container}>{children}</View>;
   }
 
   // 🔹 เลือกรูป mascot
-  const mascotImage = mascotImages[defaultColor]?.[defaultMood];
+  const mascotImage = mascotImages[defaultColor];
 
   // 🔹 ถ้า path ไม่เจอ แสดง log
   if (!mascotImage) {

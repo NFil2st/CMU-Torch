@@ -8,6 +8,7 @@ import scanRoutes from "./routes/scanRoutes.js";
 import moodRoutes from "./routes/moodRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
 import foodRoutes from "./routes/foodRoutes.js";
+import stackRoutes from "./routes/stackRoutes.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/api", scanRoutes);
 app.use("/api", moodRoutes);
 app.use("/api", exerciseRoutes);
 app.use("/api", foodRoutes);
+app.use("/api", stackRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
