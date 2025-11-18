@@ -20,14 +20,6 @@ const colorFromScore = (score) => {
   return "purple";
 };
 
-const moodFromScore = (score) => {
-  if (score == null || score <= 2.5) return "sad";
-  if (score > 2.5 && score < 4) return "good";  // <=4 ไม่รวม
-  if (score >= 4) return "happy";
-  return "good";
-};
-
-
 export default function AppActionsMascotRun({ children }) {
   const [defaultColor, setDefaultColor] = useState(null);
   const bounceAnim = useRef(new Animated.Value(0)).current;
