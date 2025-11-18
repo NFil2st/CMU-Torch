@@ -11,25 +11,26 @@ export default function MentalScreen({ navigation }) {
     
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [totalScore, setTotalScore] = useState(0);
 
     useEffect(() => {
         const q = [
             {
                 question: "ฉันรู้สึกยากที่จะผ่อนคลาย",
                 choices: [
-                    "วันนี้ฉันผ่อนคลายได้ดี",
-                    "รู้สึกเฉย ๆ ไม่ได้ผ่อนคลายมากนัก",
-                    "วันนี้ฉันผ่อนคลายได้นิดหน่อย",
-                    "วันนี้ฉันผ่อนคลายไม่ได้เลย",
+                    { label: "วันนี้ฉันผ่อนคลายได้ดี", score: 0 },
+                    { label: "รู้สึกเฉย ๆ ไม่ได้ผ่อนคลายมากนัก", score: 1 },
+                    { label: "วันนี้ฉันผ่อนคลายได้นิดหน่อย", score: 2 },
+                    { label: "วันนี้ฉันผ่อนคลายไม่ได้เลย", score: 3 },
                 ]
             },
             {
                 question: "ฉันรู้สึกรับรู้ได้ว่าปากของฉันแห้ง",
                 choices: [
-                    "ไม่มีอาการปากแห้งเลย",
-                    "ปากแห้งบ้างแต่ไม่รบกวน",
-                    "ปากค่อนข้างแห้ง รู้สึกได้ชัด",
-                    "ปากแห้งมากจนรบกวนมาก",
+                    { label: "ไม่มีอาการปากแห้งเลย", score: 0 },
+                    { label: "ปากแห้งบ้างแต่ไม่รบกวน", score: 1 },
+                    { label: "ปากค่อนข้างแห้ง รู้สึกได้ชัด", score: 2 },
+                    { label: "ปากแห้งมากจนรบกวนมาก", score: 3 },
                 ]
             }
         ];
@@ -40,11 +41,19 @@ export default function MentalScreen({ navigation }) {
 
     const qData = questions[currentIndex];
 
-    const handleSelect = () => {
-        if (currentIndex < questions.length - 1) {
+    const handleSelect = (choiceScore) => {
+        const newTotal = totalScore + (choiceScore || 0);
+        const isLast = currentIndex >= questions.length - 1;
+
+        if (!isLast) {
+            setTotalScore(newTotal);
             setCurrentIndex(prev => prev + 1);
         } else {
-            navigation.navigate("MentalSummaryScreen");
+            if (newTotal > 14) {
+                navigation.navigate("MentalPositiveScreen", { score: newTotal });
+            } else {
+                navigation.navigate("MentalNegativeScreen", { score: newTotal });
+            }
         }
     };
 
@@ -65,9 +74,9 @@ export default function MentalScreen({ navigation }) {
                         {qData.choices.map((item, index) => (
                             <FeatureCard
                                 key={index}
-                                title={item}
+                                title={item.label} // updated to use label
                                 colors={pickColors(index)}
-                                onPress={handleSelect}
+                                onPress={() => handleSelect(item.score)} // pass score
                             />
                         ))}
                     </View>
