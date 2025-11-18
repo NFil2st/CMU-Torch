@@ -29,7 +29,7 @@ export default function NavBar({ navigation }) {
     navigation.navigate(screen);
   };
 
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('userToken');
       navigation.replace('Login');
@@ -56,6 +56,9 @@ export default function NavBar({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleNavigate('Summarize')} style={styles.menuItem}>
             <Text style={styles.menuText}>Summarize</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigate('About')} style={styles.menuItem}>
+            <Text style={styles.menuText}>About us</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
             <Text style={styles.menuText}>Logout</Text>

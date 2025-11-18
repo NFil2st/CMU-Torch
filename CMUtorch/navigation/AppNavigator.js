@@ -19,6 +19,8 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 //หน้าสรุปผล
 import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
 
+import AboutScreen from '../screens/About/AboutScreen';
+
 // widgets
 import DailyLogWidget from '../components/common/DailyLogWidget';
 
@@ -107,7 +109,11 @@ export default function AppNavigator() {
           name="CameraScreen"
           component={CameraScreen}
         />
-
+        {/* About Screen */}
+        <Stack.Screen
+          name="About"
+          component={AboutScreen}
+        />
         {/* Profile Screens */
           <Stack.Screen
             name="Profile"
