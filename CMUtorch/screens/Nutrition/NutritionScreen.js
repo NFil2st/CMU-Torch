@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 30,
-    height: height * 0.55,       // เพิ่มความสูง 55% ของจอ
+    height: height * 0.5,       // เพิ่มความสูง 55% ของจอ
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
@@ -301,11 +301,6 @@ const styles = StyleSheet.create({
     marginRight: 12,
     padding: 10,
     borderRadius: 15, 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
   },
 
   foodImage: {

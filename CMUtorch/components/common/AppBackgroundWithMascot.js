@@ -90,7 +90,6 @@ const res = await fetch(`${API_URL}/api/getMood`, {
 });
 
 const data = await res.json();
-console.log(data);
       console.log("🔹 API getMood response:", data);
 
       if (data.success && data.data) {
