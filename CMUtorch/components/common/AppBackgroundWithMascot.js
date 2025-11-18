@@ -75,13 +75,22 @@ export default function AppBackgroundWithMascot({ children }) {
 useEffect(() => {
   const fetchMood = async () => {
     try {
-      const token = await AsyncStorage.getItem("userToken");
-      if (!token) return;
+      const token = await AsyncStorage.getItem("userToken"); // ตัว token ที่ login ได้มา
+if (!token) {
+  console.log("No token found");
+  return;
+}
 
-      const res = await fetch(`${API_URL}/api/getMood`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+const res = await fetch(`${API_URL}/api/getMood`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`  // ต้องมีคำว่า Bearer
+  }
+});
+
+const data = await res.json();
+console.log(data);
       console.log("🔹 API getMood response:", data);
 
       if (data.success && data.data) {
