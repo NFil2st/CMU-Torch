@@ -44,6 +44,7 @@ import ExerciseCooldown from '../screens/Exercise/ExerciseCooldown';
 import RankingScreen from '../screens/Ranking/RankingScreen';
 
 import Map from '../screens/Map/Map';
+import mapFood from '../screens/Map/mapFood';
 
 const Stack = createNativeStackNavigator();
 
@@ -164,9 +165,15 @@ export default function AppNavigator() {
           name="RankingScreen"
           component={RankingScreen}
         />
+
+        {/* Map Screen */}
         <Stack.Screen
           name="Map"
           component={Map}
+        />
+        <Stack.Screen
+          name="mapFood"
+          component={mapFood}
         />
       </Stack.Navigator>
     </NavigationContainer>

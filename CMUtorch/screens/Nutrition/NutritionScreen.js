@@ -115,9 +115,12 @@ export default function ExerciseRecommendationScreen({ navigation }) {
     loadFoods();
   }, []);
 
-  const handleFoodPress = (food) => {
-    // food object ที่ส่งไปต้องมีข้อมูลที่จำเป็นสำหรับ CameraScreen (id, name, image_url)
-    navigation.navigate('CameraScreen', { food });
+const handleFoodPress = (food) => {
+    // ✅ แก้ไข: ส่ง foodId และ foodName ไปแทน
+    navigation.navigate('mapFood', { 
+        foodId: food.id, 
+        foodName: food.name,
+    });
   };
 
   return (

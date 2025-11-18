@@ -28,7 +28,11 @@ export default function NutritionList({ route, navigation }) {
     const [isLoading, setIsLoading] = useState(true);
 
     const handleFoodPress = (food) => {
-        navigation.navigate('CameraScreen', { food });
+        // ✅ แก้ไข: ส่ง foodId และ foodName ไปแทน
+        navigation.navigate('mapFood', { 
+            foodId: food.id, 
+            foodName: food.name,
+        });
     };
 
     const fetchFoodList = async (userGoalType) => {
@@ -68,7 +72,7 @@ export default function NutritionList({ route, navigation }) {
                 const fetchedFoods = foodResult.food_items.map(food => ({
                     id: food.id,
                     name: food.name,
-                    image: { uri: food.imagea }, // เปลี่ยน imagea เป็น { uri: ... }
+                    image: food.imagea, // เปลี่ยน imagea เป็น { uri: ... }
                 }));
                 setFoods(fetchedFoods);
             } else {
@@ -114,7 +118,7 @@ export default function NutritionList({ route, navigation }) {
                                     style={styles.foodCard}
                                     onPress={() => handleFoodPress(food)}
                                 >
-                                    <Image source={food.image} style={styles.foodImage} />
+                                    <Image source={{ uri: food.image }} style={styles.foodImage} /> 
                                     <Text style={styles.foodName}>{food.name}</Text>
                                 </TouchableOpacity>
                             ))

@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import AppBackground from '../../components/common/AppBackground';
+import AppBackground from '../../components/common/AppBackgroundWithMascot';
 import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
 
+// 🚨 ในแอปพลิเคชันจริง: ควรใช้ Geolocation API เพื่อดึงตำแหน่งปัจจุบันของผู้ใช้
 const mockUserLocation = {
-  latitude: 18.78807,
+  latitude: 18.78807, // ตำแหน่งสมมติของผู้ใช้
   longitude: 98.95244,
 };
 
-const destination = {
-  latitude: 18.79808031685481,
-  longitude: 98.95189633716744,
-};
+const { width, height } = Dimensions.get('window');
 
+// ฟังก์ชันคำนวณระยะทาง Haversine
 const calcDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -31,82 +30,126 @@ const calcDistance = (lat1, lon1, lat2, lon2) => {
   return R * c; // km
 };
 
-export default function Map({ navigation }) {
+export default function Map({ route, navigation }) {
+  // 🆕 ดึงข้อมูลสถานที่ (place) ที่ส่งมาจากหน้าจอก่อนหน้า
+  const { place } = route.params; 
+
   const [distance, setDistance] = useState(null);
   const [canStart, setCanStart] = useState(false);
 
+  // 🚨 สมมติฐาน: place object มี latitude และ longitude
+  const destination = {
+    latitude: place.latitude, 
+    longitude: place.longitude,
+  };
+  
+  // ตรวจสอบความถูกต้องของข้อมูล (เผื่อกรณีดึงข้อมูลไม่สมบูรณ์)
+  const isDestinationValid = destination.latitude && destination.longitude;
+
   useEffect(() => {
+    if (!isDestinationValid) {
+        setDistance("N/A");
+        Alert.alert("ข้อผิดพลาด", `ไม่พบพิกัด (Lat/Lon) สำหรับ ${place.name}`);
+        return;
+    }
+
     const d = calcDistance(
       mockUserLocation.latitude,
       mockUserLocation.longitude,
       destination.latitude,
       destination.longitude
     );
-    setDistance(d.toFixed(2));
-    setCanStart(d <= 2); // ถ้า <=2 km สามารถเริ่มได้
-  }, []);
+    
+    // แสดงระยะทางเป็นกิโลเมตร ทศนิยม 2 ตำแหน่ง
+    const distanceInKm = d.toFixed(2);
+    setDistance(distanceInKm);
+
+    // เงื่อนไข: ถ้า <= 2 km สามารถเริ่มได้
+    setCanStart(d <= 2); 
+  }, [place.latitude, place.longitude]); // ให้คำนวณใหม่เมื่อพิกัดเปลี่ยน
 
   const handleStart = () => {
     if (!canStart) {
       Alert.alert("ยังอยู่ไกลเกินไป", "ต้องอยู่ในระยะ 2 km จึงสามารถเริ่มได้");
       return;
     }
+    // 🚨 ส่งข้อมูลที่จำเป็นไปยังหน้า ExerciseCooldown (ถ้ามี)
     navigation.navigate("ExerciseCooldown");
   };
 
   return (
-        <AppBackground>
+    <AppBackground>
       <BackButton navigation={navigation} />
       <NavBar navigation={navigation} />
-    <View style={styles.container}>
-      <Text style={styles.header}>📍 ระยะทาง</Text>
+      <View style={styles.container}>
 
-      <LinearGradient colors={["#f7e1ff", "#e9d1ff", "#d7b3ff"]} style={styles.card}>
-        <Text style={styles.kmNumber}>{distance ? distance : "--"}</Text>
-        <Text style={styles.kmLabel}>kilometers away</Text>
-      </LinearGradient>
+        <View style={styles.speechBubble}>
+        {/* 🆕 แสดงชื่อสถานที่ */}
+        <View style={styles.header}>
+          <Text style={styles.title}>เส้นทางไปยัง</Text>
+          <Text style={styles.title}>{place.name}</Text>
+        </View>
+        <View style={styles.card}>
+          <Text style={styles.kmNumber}>{distance || "--"}</Text>
+          <Text style={styles.kmLabel}>kilometers away</Text>
+        </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoText}>📍 จาก: ตำแหน่งผู้ใช้</Text>
+          <Text style={styles.infoText}>🎯 ไปยัง: {place.name}</Text>
+        </View>
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoText}>🧭 จากตำแหน่งปัจจุบัน</Text>
-        <Text style={styles.infoText}>🎯 ไปยังจุดหมาย</Text>
+        {canStart && (
+          <TouchableOpacity style={styles.button} onPress={handleStart}>
+            <Text style={styles.buttonText}>เริ่มออกกำลังกาย</Text>
+          </TouchableOpacity>
+        )}
+        {!canStart && distance && isDestinationValid && (
+          <Text style={styles.warningText}>อยู่ห่างเกิน 2 km ไม่สามารถเริ่มได้</Text>
+        )}
+        {!isDestinationValid && (
+            <Text style={styles.warningText}>ไม่สามารถคำนวณระยะทางได้เนื่องจากไม่พบพิกัด</Text>
+        )}
       </View>
-
-      {canStart && (
-        <TouchableOpacity style={styles.button} onPress={handleStart}>
-          <Text style={styles.buttonText}>เริ่มออกกำลังกาย</Text>
-        </TouchableOpacity>
-      )}
-      {!canStart && distance && (
-        <Text style={styles.warningText}>อยู่ห่างเกิน 2 km ไม่สามารถเริ่มได้</Text>
-      )}
-    </View>
+      </View>
     </AppBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 25,
-    alignItems: "center",
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 20,
+  },
+  speechBubble: {
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    borderRadius: 30,
+    height: height * 0.5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
+    justifyContent: 'flex-start', // เปลี่ยนเป็น flex-start
+  },
+  title: {
+    fontSize: 24, // ลดขนาดลงเล็กน้อยเพื่อให้พอดีกับชื่อสถานที่ยาวๆ
+    fontWeight: "700",
+    color: "#3a0066",
+    textAlign: 'center',
   },
   header: {
-    fontSize: 26,
-    fontWeight: "700",
-    marginTop: 40,
-    marginBottom: 30,
-    color: "#3a0066",
+    marginTop: 20,
+    alignItems: 'center',
   },
   card: {
     width: "100%",
-    height: 200,
+    marginTop: 20,
+    marginBottom: 20,
     borderRadius: 26,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 6,
   },
   kmNumber: {
     fontSize: 62,
@@ -120,9 +163,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   infoBox: {
-    marginTop: 30,
-    padding: 15,
-    backgroundColor: "#faf5ff",
     borderRadius: 16,
     width: "100%",
   },
@@ -138,6 +178,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   buttonText: {
     color: "#fff",
@@ -149,5 +192,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#cc0000",
+    textAlign: 'center',
   },
 });

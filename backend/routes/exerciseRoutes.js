@@ -4,13 +4,15 @@ import express from "express";
 import { 
     completeExercise, 
     getExercise,
-    getExerciseList
+    getExerciseList,
+    getExercisePlaces
 } from "../controllers/exerciseController.js";
 
 const router = express.Router();
 
 router.post("/completeExercise", completeExercise);
 router.get("/getExercise", getExercise); 
-router.get("/getExerciseList", getExerciseList); 
+router.get("/getExerciseList", getExerciseList);
+router.get("/getExercisePlaces", getExercisePlaces); 
 
 export default router;

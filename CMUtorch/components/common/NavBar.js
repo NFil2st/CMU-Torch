@@ -58,7 +58,7 @@ export default function NavBar({ navigation }) {
             <Text style={styles.menuText}>Summarize</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Logout</Text>
+            <Text style={styles.menuText}>Logout</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={() => handleNavigate('Settings')} style={styles.menuItem}>
             <Text style={styles.menuText}>Settings</Text>

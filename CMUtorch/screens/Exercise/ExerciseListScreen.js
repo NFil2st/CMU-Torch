@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import FeatureCard from '../../components/common/ExerciseCard';
 import BackButton from '../../components/common/BackButton';
-import AppBackground from '../../components/common/AppBackground';
+import AppBackground from '../../components/common/AppBackgroundWithMascot';
 import NavBar from '../../components/common/NavBar';
 import axios from 'axios'; 
 import Constants from "expo-constants";
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginHorizontal: 20,
         borderRadius: 30,
-        height: height * 0.7, 
+        height: height * 0.5, 
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,

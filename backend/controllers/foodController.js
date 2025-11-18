@@ -145,3 +145,69 @@ export const getFoodList = async (req, res) => {
     });
   }
 };
+export const getFoodLocations = async (req, res) => {
+    try {
+        const { food_id } = req.query; // ดึง food_id จาก Query Parameter
+
+        if (!food_id) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Missing 'food_id' query parameter." 
+            });
+        }
+
+        // 1. ดึงข้อมูล location_id จากตาราง food_locations ที่ตรงกับ food_item_id
+        const { data: foodLocations, error: foodLocError } = await supabase
+            .from("food_locations")
+            .select("location_id")
+            .eq("food_item_id", food_id);
+
+        if (foodLocError) {
+            console.error("Supabase Error fetching food_locations:", foodLocError.message);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Failed to fetch food locations mapping.", 
+                details: foodLocError.message 
+            });
+        }
+
+        if (foodLocations.length === 0) {
+            return res.json({ 
+                success: true, 
+                locations: [],
+                message: `No locations found for food_item_id: ${food_id}`
+            });
+        }
+
+        // 2. ดึง location_id ทั้งหมดเพื่อนำไปใช้ค้นหาในตาราง locations
+        const locationIds = foodLocations.map(item => item.location_id);
+
+        // 3. ดึงข้อมูลสถานที่ (latitude, longitude, name) จากตาราง locations
+        const { data: locations, error: locError } = await supabase
+            .from("locations")
+            .select("id, name, latitude, longitude") // ดึงคอลัมน์ที่จำเป็น
+            .in("id", locationIds); // กรองตาม location_id ที่ได้มา
+
+        if (locError) {
+            console.error("Supabase Error fetching locations:", locError.message);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Failed to fetch location details.", 
+                details: locError.message 
+            });
+        }
+
+        // 4. ส่งข้อมูลสถานที่กลับไป (อาจจะต้องมีการเรียงลำดับตามระยะทางเพื่อให้ front-end เลือกที่ใกล้สุด)
+        return res.json({ 
+            success: true, 
+            locations: locations 
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Server error." 
+        });
+    }
+};
