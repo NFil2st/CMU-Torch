@@ -62,6 +62,9 @@ export const verifyOtp = (req, res) => {
 
 export const register = async (req, res) => {
   const { username, password, name, major, otp } = req.body;
+  if (!username || !password || !name || !major || !otp) {
+    return res.status(400).json({ success: false, message: "Missing required fields" });
+  }
 
   // หาอีเมลจาก OTP
   const emailRecord = Object.entries(otps).find(
@@ -82,18 +85,35 @@ export const register = async (req, res) => {
     .single();
 
   if (exists) {
-    return res.status(400).json({ success: false, message: "อีเมลนี้ถูกใช้ไปแล้ว" });
+
+    return res.status(409).json({ success: false, message: "Email already registered" });
+
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
 
   const { error } = await supabase.from("User").insert([
+
     { cmumail, username, name, password: passwordHash, major }
+
   ]);
 
+
+
   if (error) {
+
     console.error("SUPABASE INSERT ERROR:", error);
-    return res.status(500).json({ success: false, message: "สมัครไม่สำเร็จ" });
+
+    const isDuplicate =
+
+      error.code === "23505" ||
+
+      (typeof error.message === "string" && error.message.toLowerCase().includes("duplicate"));
+
+    const status = isDuplicate ? 409 : 500;
+
+    return res.status(status).json({ success: false, message: "Email already registered" });
+
   }
 
   return res.json({ success: true, message: "สมัครสมาชิกสำเร็จ" });
@@ -102,29 +122,28 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { username, password } = req.body;
 
-  const { data: user } = await supabase
+  const { data: user, error } = await supabase
     .from("User")
     .select("*")
     .eq("username", username)
     .single();
 
-  if (!user) {
-    return res.status(400).json({ success: false, message: "ไม่พบผู้ใช้" });
+  if (error || !user) {
+    return res.status(401).json({ success: false, message: "User not found" });
   }
 
   const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ success: false, message: "รหัสผ่านผิด" });
+  if (!match) {
+    return res.status(401).json({ success: false, message: "Invalid password" });
+  }
 
   const token = jwt.sign(
-{ email: user.cmumail, username: user.username },
+    { email: user.cmumail, username: user.username },
     process.env.JWT_SECRET
   );
 
-  return res.json({ success: true, token });
+  return res.json({ success: true, token, username: user.username });
 };
-
-
-
 
 //profile controller
 export const getMe = async (req, res) => {
@@ -141,7 +160,14 @@ export const getMe = async (req, res) => {
 
     if (error || !user) return res.status(404).json({ success: false });
 
-    return res.json({ success: true, user });
+    return res.json({
+      success: true,
+      data: {
+        username: user.username,
+        name: user.name,
+        major: user.major
+      }
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false });
