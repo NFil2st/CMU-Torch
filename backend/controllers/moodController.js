@@ -7,7 +7,13 @@ export const updateMood = async (req, res) => {
     if (!token) return res.status(401).json({ success: false });
 
     const { moodValue } = req.body;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      console.error("JWT Error:", error);
+      return res.status(401).json({ success: false });
+    }
 
     // ดึงข้อมูล user
     const { data: user, error } = await supabase
@@ -23,6 +29,10 @@ export const updateMood = async (req, res) => {
     // --- ตรวจสอบให้เป็น JSON ---
     let history = user.dailyMoodHistory || {};
     let todayMoods = history[today] || [];
+
+    if (user.lastMoodDate !== today) {
+      todayMoods = [];
+    }
 
     todayMoods.push(moodValue);
     history[today] = todayMoods;

@@ -7,7 +7,13 @@ export const completeFood = async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ success: false });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      console.error("JWT Error:", error);
+      return res.status(401).json({ success: false });
+    }
 
     const { data: user, error } = await supabase
       .from("User")

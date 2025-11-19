@@ -30,13 +30,10 @@ try {
 
     if (error || !user) return res.status(404).json({ success: false });
 
-    const today = new Date().toISOString().slice(0, 10);
-    let newStack = 1; // เริ่มจาก 1
-    if (user.lastExerciseDate === today && typeof user.stackExercise === "number") {
-      // ถ้าออกกำลังกายวันนี้แล้ว → ไม่เพิ่มอีก
-      return res.json({ success: true, stackExercise: user.stackExercise });
-    } else if (user.stackExercise && typeof user.stackExercise === "number") {
-      newStack = user.stackExercise + 1;
+    const today = new Date().toISOString().slice(0, 10);
+    let newStack = 1; // เริ่มจาก 1
+    if (typeof user.stackExercise === "number") {
+      newStack = user.stackExercise + 1;
     }
 
     await supabase
@@ -76,10 +73,10 @@ export const getExerciseList = async (req, res) => {
         
         // แปลงผลลัพธ์: Supabase จะส่งกลับ { id: 1, text: 'บาสเกตบอล' }
         // เราแปลงเป็น { id: 1, title: 'บาสเกตบอล' } เพื่อให้เข้ากันกับ Frontend
-        const exercises = sports.map(sport => ({
-            id: sport.id,
-            title: sport.name,
-            // category, icon, colors, ฯลฯ หากมีในตาราง สามารถ select มาได้
+        const exercises = (Array.isArray(sports) ? sports : []).map(sport => ({
+            id: sport.id,
+            title: sport.name,
+            // ข้อมูลเสริมอื่นๆ
         }));
 
         res.status(200).json({
