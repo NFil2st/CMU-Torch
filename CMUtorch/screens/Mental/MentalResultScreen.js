@@ -56,12 +56,16 @@ export default function MentalResultScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: width,
-    marginTop: height * 0.45,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 30,
-    padding: 25,
-    minHeight: height * 0.55,
+    width: width - 40,
+    height: '50%',
+    marginTop: height * 0.5,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 10,
+    padding: 30,
+    elevation: 8,
   },
   title: {
     fontSize: 20,
@@ -94,11 +98,12 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   button: {
-    backgroundColor: "#4b8bff",
+    backgroundColor: "#7a3586ff",
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
-    marginTop: 10,
+    width: "60%",
+    alignSelf: "center",
   },
   buttonText: {
     color: "#fff",

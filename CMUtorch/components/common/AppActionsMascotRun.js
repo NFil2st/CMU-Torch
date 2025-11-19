@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, overflow: "hidden" },
   mascotBg: {
     position: "absolute",
-    top: -100,
-    width: "135%",
+    top: -200,
+    width: "105%",
     height: "100%",
     alignSelf: "center",
     zIndex: 1,

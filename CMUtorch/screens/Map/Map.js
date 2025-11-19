@@ -7,8 +7,8 @@ import NavBar from '../../components/common/NavBar';
 
 // 🚨 ในแอปพลิเคชันจริง: ควรใช้ Geolocation API เพื่อดึงตำแหน่งปัจจุบันของผู้ใช้
 const mockUserLocation = {
-  latitude: 18.78807, // ตำแหน่งสมมติของผู้ใช้
-  longitude: 98.95244,
+  latitude: 18.8575373,
+  longitude: 99.0974583,
 };
 
 const { width, height } = Dimensions.get('window');
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 30,
-    height: height * 0.5,
+    height: height * 0.6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', // เปลี่ยนเป็น flex-start
   },
   title: {
-    fontSize: 24, // ลดขนาดลงเล็กน้อยเพื่อให้พอดีกับชื่อสถานที่ยาวๆ
+    fontSize: 20, // ลดขนาดลงเล็กน้อยเพื่อให้พอดีกับชื่อสถานที่ยาวๆ
     fontWeight: "700",
     color: "#3a0066",
     textAlign: 'center',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 14,
     color: "#5c008a",
     marginBottom: 5,
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "600",
   },
   warningText: {

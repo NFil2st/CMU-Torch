@@ -21,9 +21,6 @@ import SummarizeScreen from '../screens/Summarize/SummarizeScreen';
 
 import AboutScreen from '../screens/About/AboutScreen';
 
-// widgets
-import DailyLogWidget from '../components/common/DailyLogWidget';
-
 //โภชนาการ
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
 import NutritionList from '../screens/Nutrition/NutritionList';
@@ -46,7 +43,13 @@ import RankingScreen from '../screens/Ranking/RankingScreen';
 import Map from '../screens/Map/Map';
 import mapFood from '../screens/Map/mapFood';
 
-import settingScreen from '../screens/Setting/settingScreen';
+import SettingScreen from '../screens/Setting/SettingScreen';
+
+import StackHistoryScreen from '../screens/History/StackHistoryScreen';
+
+//evrnt
+import EventScreen from '../screens/Event/eventScreen';
+import EventMap from '../screens/Event/eventMap';
 
 const Stack = createNativeStackNavigator();
 
@@ -76,12 +79,6 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Signup"
           component={SignupScreen}
-        />
-
-        {/* Widget Screens */}
-        <Stack.Screen
-          name="DailyLogWidget"
-          component={DailyLogWidget}
         />
 
         {/* Main App Screens */}
@@ -180,11 +177,27 @@ export default function AppNavigator() {
         {/* Setting Screen */}
         <Stack.Screen
           name="Settings"
-          component={settingScreen}
+          component={SettingScreen}
         />
         <Stack.Screen
           name="AboutMe"
           component={AboutScreen}
+        />
+
+        {/* Event Screen */}
+        <Stack.Screen
+          name="EventScreen"
+          component={EventScreen}
+        />
+        <Stack.Screen
+          name="EventMap"
+          component={EventMap}
+        />
+
+        {/* Stack History Screen */}
+        <Stack.Screen
+          name="StackHistory"
+          component={StackHistoryScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

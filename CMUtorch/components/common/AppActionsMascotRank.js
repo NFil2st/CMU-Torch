@@ -139,8 +139,9 @@ const styles = StyleSheet.create({
   mascotBg: {
     position: "absolute",
     top: -100,
-    width: "135%",
-    height: "100%",
+    right: -50,
+    width: "75%",
+    height: "80%",
     alignSelf: "center",
     zIndex: 1,
     opacity: 0.95,

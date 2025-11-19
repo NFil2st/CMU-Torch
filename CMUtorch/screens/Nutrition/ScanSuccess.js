@@ -6,8 +6,10 @@ import NavBar from '../../components/common/NavBar';
 import StackColorPopup from '../../components/common/StackColorPopup';
 import Constants from "expo-constants";
 
+// ดึง API_URL จาก Constants
 const API_URL = Constants.expoConfig.extra.apiUrl;
 
+// ฟังก์ชันกำหนดสีจาก StackFood
 const colorFromStack = (stack) => {
   if (stack == null || stack < 10) return "orange";
   if (stack < 30) return "red";
@@ -18,23 +20,24 @@ const colorFromStack = (stack) => {
 
 export default function ScanSuccess({ route, navigation }) {
   const { data } = route.params;
-  const predictions = data?.predictions || [];
+
+  // --- ส่วนที่แก้ไข: ดึง Array ของชื่อคลาส (String) มาใช้โดยตรง ---
+  // เนื่องจาก API Endpoint ส่ง predictions: ["Desserts", "Drinks"] มาให้แล้ว
+  const predictions = data?.predictions || []; 
+  // ---
+
+  console.log("Predictions:", predictions); // ควรแสดง ["Desserts", "Drinks"] หรือชื่อคลาสที่พบ
 
   const foodMessages = {
-    drinks: "ดื่มน้ำให้สดชื่นหน่อยน้าา 💧",
-    steaks: "สเต๊กเนื้อฉ่ำ ๆ ได้พลังสุดๆ! 🥩",
-    shrimp: "กุ้งสดเด้งๆ เติมโปรตีนแบบจุกๆ 🦐",
-    eggs: "ไข่เต็มไปด้วยโปรตีนเลยนะ 🍳",
-    chickens: "ไก่ล่ะสุดยอดโปรตีนลีนๆ 🐔",
-    salmon: "แซลมอนโอเมก้า 3 ล้นๆ บำรุงสมองเลยน้า 🐟",
-    porks: "หมูให้พลังงานดีมากเลยนะ 🐷",
-    noodles: "เติมคาร์บแบบอร่อย ๆ ด้วยเส้น 🍜",
-    rice: "ข้าวอุ่น ๆ เติมพลังงานเต็มที่ 🍚",
-    creams: "ครีมหวาน ๆ ละมุนมากก 🍦",
-    desserts: "ขนมหอมหวาน เติมน้ำตาลให้เต็มที่เลยย 🍰",
-    breads: "ขนมปังกรอบนุ่ม กินแล้วอิ่มนาน 🥖",
+    "Drinks": "ดื่มน้ำให้สดชื่นหน่อยน้าา 💧",
+    "Food-Steaks": "สเต๊กเนื้อฉ่ำ ๆ ได้พลังสุดๆ! 🥩",
+    "Food-Noodle Dishes": "เติมคาร์บแบบอร่อย ๆ ด้วยเส้น 🍜",
+    "Food-Rice Dishes": "ข้าวอุ่น ๆ เติมพลังงานเต็มที่ 🍚",
+    "Desserts": "ขนมหอมหวาน เติมน้ำตาลให้เต็มที่เลยย 🍰",
   };
 
+
+  // จัดกลุ่มอาหารที่พบ (นับจำนวนซ้ำ)
   const grouped = predictions.reduce((acc, item) => {
     acc[item] = (acc[item] || 0) + 1;
     return acc;
@@ -44,6 +47,7 @@ export default function ScanSuccess({ route, navigation }) {
   const [stack, setStack] = useState(null);
   const [oldStack, setOldStack] = useState(null);
 
+  // Animation values
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-20)).current;
 
@@ -56,7 +60,7 @@ export default function ScanSuccess({ route, navigation }) {
     ]).start();
   };
 
-  // เปลี่ยนชื่อเป็น completeFood
+  // เรียก API เพื่ออัปเดต StackFood
   const completeFood = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -73,6 +77,7 @@ export default function ScanSuccess({ route, navigation }) {
       const data = await res.json();
 
       if (data.success) {
+        // กำหนด stack เก่าและใหม่ และเริ่ม animation
         setOldStack(data.stackFood - 1);
         setStack(data.stackFood);
         animateStack();
@@ -84,24 +89,24 @@ export default function ScanSuccess({ route, navigation }) {
 
   const [popupVisible, setPopupVisible] = useState(false);
 
-// เรียกหลัง stack ใหม่ได้แล้ว
-useEffect(() => {
-  const showOncePerColor = async () => {
-    if (stack === null) return;
+  // Logic สำหรับแสดง Popup เมื่อถึง stack สีใหม่
+  useEffect(() => {
+    const showOncePerColor = async () => {
+      if (stack === null) return;
 
-    const colorKey = colorFromStack(stack); // orange, red, blue, purple
-    const storageKey = `stackPopupShown_${colorKey}`; // สร้าง key ตามสี
-    const shown = await AsyncStorage.getItem(storageKey);
+      const colorKey = colorFromStack(stack); // orange, red, blue, purple
+      const storageKey = `stackPopupShown_${colorKey}`; // สร้าง key ตามสี
+      const shown = await AsyncStorage.getItem(storageKey);
 
-    // แสดง popup ถ้ายังไม่เคยโชว์สำหรับสีนี้
-    if ([1, 10, 30, 60].includes(stack) && !shown) {
-      setPopupVisible(true);
-      await AsyncStorage.setItem(storageKey, "true");
-    }
-  };
+      // แสดง popup ถ้าเป็น stack แรกของสีนั้น ๆ และยังไม่เคยโชว์
+      if ([1, 10, 30, 60].includes(stack) && !shown) {
+        setPopupVisible(true);
+        await AsyncStorage.setItem(storageKey, "true");
+      }
+    };
 
-  showOncePerColor();
-}, [stack]);
+    showOncePerColor();
+  }, [stack]);
 
   // เรียก completeFood ตอน component mount
   useEffect(() => {
@@ -109,57 +114,57 @@ useEffect(() => {
   }, []);
 
   return (
-        <AppBackground>
+    <AppBackground>
       <NavBar navigation={navigation} />
       <StackColorPopup
-  stack={stack}
-  visible={popupVisible}
-  onClose={() => setPopupVisible(false)}
-/>
+        stack={stack}
+        visible={popupVisible}
+        onClose={() => setPopupVisible(false)}
+      />
 
-    <View style={styles.container}>
-      <Text style={styles.title}>ผลลัพธ์การสแกนอาหาร 🍽️</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>ผลลัพธ์การสแกนอาหาร 🍽️</Text>
 
-      <View style={styles.bubble}>
-        {predictions.length > 0 ? (
-          Object.keys(grouped).map((item, index) => (
-            <View key={index} style={styles.foodItem}>
-              <Text style={styles.foodName}>
-                {item} {grouped[item] > 1 ? `x${grouped[item]}` : ""}
-              </Text>
-              <Text style={styles.foodMsg}>{foodMessages[item]}</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noFood}>ไม่พบอาหาร 😢</Text>
+        <View style={styles.bubble}>
+          {predictions.length > 0 ? (
+            Object.keys(grouped).map((item, index) => (
+              <View key={index} style={styles.foodItem}>
+                <Text style={styles.foodName}>
+                  {item} {grouped[item] > 1 ? `x${grouped[item]}` : ""}
+                </Text>
+                <Text style={styles.foodMsg}>{foodMessages[item]}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.noFood}>ไม่พบอาหาร 😢</Text>
+          )}
+        </View>
+
+        {/* StackFood Section */}
+        {stack !== null && (
+          <View style={{ marginTop: 40, alignItems: "center" }}>
+            <Text style={styles.stackLabel}>StackFood</Text>
+
+            <Text style={styles.stackOld}>{oldStack}</Text>
+
+            <Animated.Text
+              style={[
+                styles.stackNew,
+                { opacity: opacity, transform: [{ translateY }] },
+              ]}
+            >
+              {stack}
+            </Animated.Text>
+
+            <TouchableOpacity
+              style={styles.homeButton}
+              onPress={() => navigation.navigate("Home")}
+            >
+              <Text style={styles.homeButtonText}>กลับหน้า Home</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
-
-      {/* StackFood Section */}
-      {stack !== null && (
-        <View style={{ marginTop: 40, alignItems: "center" }}>
-          <Text style={styles.stackLabel}>StackFood</Text>
-
-          <Text style={styles.stackOld}>{oldStack}</Text>
-
-          <Animated.Text
-            style={[
-              styles.stackNew,
-              { opacity: opacity, transform: [{ translateY }] },
-            ]}
-          >
-            {stack}
-          </Animated.Text>
-
-          <TouchableOpacity
-            style={styles.homeButton}
-            onPress={() => navigation.navigate("Home")}
-          >
-            <Text style={styles.homeButtonText}>กลับหน้า Home</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
     </AppBackground>
   );
 }

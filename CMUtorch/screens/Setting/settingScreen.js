@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ImageBackground } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function settingScreen({ navigation }) {
+const banner = require('../../assets/Mascot/event/torch_event.png')
+
+export default function SettingScreen({ navigation }) {
+
   const [stack, setStack] = useState("food"); // default stack
 
   // โหลดค่า stack ที่เลือกก่อนหน้า
@@ -34,6 +39,22 @@ export default function settingScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
 
+     <TouchableOpacity onPress={() => navigation.navigate("EventScreen")}>
+  <ImageBackground
+    source={banner}
+    resizeMode="cover"
+    style={styles.eventBackground}
+    imageStyle={{ borderRadius: 10 }}
+  >
+    <LinearGradient
+      colors={["rgba(0,0,0,0.55)", "rgba(0,0,0,0.55)"]}
+      style={styles.overlay}
+    >
+      <Text style={styles.eventText}>Event</Text>
+    </LinearGradient>
+  </ImageBackground>
+</TouchableOpacity>
+
       {/* Stack Selection */}
       <View style={styles.stackContainer}>
         <Text style={styles.subtitle}>Choose Stack:</Text>
@@ -63,12 +84,11 @@ export default function settingScreen({ navigation }) {
         <Text style={styles.aboutText}>Go to About Me</Text>
       </TouchableOpacity>
 
-
-    <TouchableOpacity
+          <TouchableOpacity
         style={styles.aboutButton}
-        onPress={() => navigation.navigate("DailyLogWidget")}
+        onPress={() => navigation.navigate("StackHistory")}
       >
-        <Text style={styles.aboutText}>Go to Widget</Text>
+        <Text style={styles.aboutText}>Stack History</Text>
       </TouchableOpacity>
 
     <TouchableOpacity
@@ -115,4 +135,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   aboutText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+eventBackground: {
+  width: "100%",
+  height: 110,
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: 20,
+  marginBottom: 20,
+  borderRadius: 10,
+  overflow: "hidden",
+},
+
+overlay: {
+  flex: 1,
+  width: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(255, 146, 251, 0.1)",  // ปรับได้
+  borderRadius: 10,
+},
+
+eventText: {
+  color: "#fff",
+  fontSize: 22,
+  fontWeight: "900",
+  textShadowColor: "rgba(0,0,0,0.8)",
+  textShadowOffset: { width: 1, height: 1 },
+  textShadowRadius: 5,
+},
+
 });

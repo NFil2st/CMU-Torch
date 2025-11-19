@@ -1,6 +1,7 @@
 import multer from "multer";
 import axios from "axios";
 import fs from "fs";
+import FormData from "form-data";
 
 const upload = multer({ dest: "../uploads/" });
 
@@ -9,41 +10,33 @@ export const scanFood = async (req, res) => {
     const imgPath = req.file.path;
     console.log("📸 Received image:", imgPath);
 
-    // อ่านไฟล์เป็น base64
-    const imageBase64 = fs.readFileSync(imgPath, { encoding: "base64" });
-    console.log("🧬 Base64 length:", imageBase64.length);
+    const apiKey = process.env.ROBOFLOW_API_KEY;
+    if (!apiKey) throw new Error("❌ Missing ROBOFLOW_API_KEY in .env");
 
-    // ส่ง request เข้า Roboflow workflow
- const rfRes = await axios.post(
-  "https://detect.roboflow.com/fff-hw4wm/workflows/find-drinks-steaks-shrimp-eggs-chickens-salmon-porks-noodles-rice-creams-desserts-and-breads-3?api_key=rcfCtxxbiWonyMK1fmce",
+    const modelURL = `https://detect.roboflow.com/food-r9pba/4?api_key=${apiKey}`;
 
-  {
-    inputs: {
-          image: { type: "base64", value: imageBase64 }
-    }
-  },
-  {
-    headers: { "Content-Type": "application/json" }
-  }
-);
+    const form = new FormData();
+    form.append("file", fs.createReadStream(imgPath));
 
-    console.log("📥 Roboflow Raw Response:", JSON.stringify(rfRes.data, null, 2));
-
-    // ดึง predictions
-    const predictions = rfRes.data.outputs?.[0]?.predictions || [];
-    const classNames = predictions.map(p => p.class);
-
-    // ลบไฟล์ชั่วคราว
-    fs.unlinkSync(imgPath);
-
-    // ส่งกลับ frontend
-    return res.json({
-      success: true,
-      predictions: classNames
+    const rfRes = await axios.post(modelURL, form, {
+      headers: {
+        ...form.getHeaders()
+      }
     });
+console.log("📥 Roboflow Raw Response:", JSON.stringify(rfRes.data, null, 2));
 
+// --- แก้ไขโค้ดตรงนี้ ---
+// เปลี่ยนจาก: const predictions = rfRes.data.outputs?.[0]?.predictions || [];
+// เป็น:
+const rawPredictions = rfRes.data.predictions || []; 
+const classNames = rawPredictions.map(p => p.class);
+// ----------------------
+
+fs.unlinkSync(imgPath);
+
+    return res.json({ success: true, predictions: classNames });
   } catch (err) {
-    console.error("❌ Scan error:", err.response?.data || err);
+    console.error("❌ Scan error:", err.response?.data || err.message || err);
     return res.status(500).json({ success: false, message: "Scan failed" });
   }
 };

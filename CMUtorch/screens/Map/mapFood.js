@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, ScrollView } from "react-native";
 import AppBackground from '../../components/common/AppActionsMascotRun';
 import BackButton from '../../components/common/BackButton';
 import NavBar from '../../components/common/NavBar';
@@ -9,8 +9,8 @@ const API_URL = Constants.expoConfig.extra.apiUrl;
 
 // 🚨 ในแอปพลิเคชันจริง: ควรใช้ Geolocation API เพื่อดึงตำแหน่งปัจจุบันของผู้ใช้
 const mockUserLocation = {
-  latitude: 18.78807, // ตำแหน่งสมมติของผู้ใช้ (ตัวอย่าง: มหาวิทยาลัยเชียงใหม่)
-  longitude: 98.9850,
+  latitude: 18.8575373,
+  longitude: 99.0974583,
 };
 
 const { width, height } = Dimensions.get('window');
@@ -103,7 +103,7 @@ export default function Map({ route, navigation }) {
         setDistance(distanceInKm);
 
         // เงื่อนไข: ถ้า <= 2 km สามารถเริ่มได้
-        setCanStart(nearestLoc.distance <= 4); 
+        setCanStart(nearestLoc.distance <= 20); 
     };
 
     if (foodId) {
@@ -129,6 +129,8 @@ export default function Map({ route, navigation }) {
       <BackButton navigation={navigation} />
       <NavBar navigation={navigation} />
       <View style={styles.container}>
+
+        <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.speechBubble}>
         <View style={styles.header}>
@@ -160,12 +162,18 @@ export default function Map({ route, navigation }) {
             <Text style={styles.warningText}>ไม่สามารถคำนวณระยะทางได้หรือไม่มีสถานที่</Text>
         )}
       </View>
+      </ScrollView>
       </View>
     </AppBackground>
   );
 }
 
 const styles = StyleSheet.create({
+      scrollContent: {
+        flexGrow: 1,
+        justifyContent: 'flex-end', 
+        paddingBottom: 20,
+    },
   container: {
     flexGrow: 1,
     justifyContent: 'flex-end',
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 30,
-    height: height * 0.5,
+    height: height * 0.6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', // เปลี่ยนเป็น flex-start
   },
   title: {
-    fontSize: 24, // ลดขนาดลงเล็กน้อยเพื่อให้พอดีกับชื่อสถานที่ยาวๆ
+    fontSize: 20, // ลดขนาดลงเล็กน้อยเพื่อให้พอดีกับชื่อสถานที่ยาวๆ
     fontWeight: "700",
     color: "#3a0066",
     textAlign: 'center',
@@ -235,7 +243,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "600",
   },
   warningText: {
