@@ -148,7 +148,7 @@ export const login = async (req, res) => {
 //profile controller
 export const getMe = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ success: false });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -165,7 +165,8 @@ export const getMe = async (req, res) => {
       data: {
         username: user.username,
         name: user.name,
-        major: user.major
+        major: user.major,
+        cmumail: user.cmumail
       }
     });
   } catch (err) {

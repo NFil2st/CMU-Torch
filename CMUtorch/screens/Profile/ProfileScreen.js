@@ -25,8 +25,8 @@ export default function ProfileScreen({ navigation }) {
         const res = await axios.get(`${API_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        setUser(res.data.data);
 
-        setUser(res.data.user);
       } catch (err) {
         console.error('Error fetching user:', err);
       } finally {
